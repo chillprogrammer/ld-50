@@ -2,7 +2,9 @@ import { GodrayFilter } from "@pixi/filter-godray";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
+import { Enemy } from "../entities/enemy";
 import { Player } from "../entities/player";
+
 
 /**
  * This represents the map for all entities to spawn on
@@ -25,6 +27,7 @@ export class GameMap {
 
     // Entities
     private player: Player = null;
+    private enemy: Enemy = null;
 
     private godrayFilter: GodrayFilter = null;
 
@@ -55,6 +58,7 @@ export class GameMap {
         this.createArenaCircle();
         this.createWallColumnsTop();
         this.createPlayer();
+        this.createEnemy();
         this.createWallColumnsBottom();
     }
 
@@ -62,6 +66,12 @@ export class GameMap {
         this.player = new Player();
         this.player.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.player.getContainer());
+    }
+
+    private createEnemy(): void {
+        this.enemy = new Enemy();
+        this.enemy.setMaxWalkingRadius(this.arenaObject.radius);
+        this.container.addChild(this.enemy.getContainer());
     }
 
     private createArenaCircle(): void {
@@ -117,6 +127,12 @@ export class GameMap {
         }
     }
 
+    private updateEnemy(delta: number) : void {
+        if(this.enemy) {
+            this.enemy.update(delta);
+        }
+    }
+
     /**
      * Runs from the Main Game Loop
      * @param delta delta time
@@ -125,6 +141,7 @@ export class GameMap {
         // TODO - add update logic
         this.updateGodrays(delta);
         this.updatePlayer(delta);
+        this.updateEnemy(delta);
     }
 }
 

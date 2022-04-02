@@ -16,6 +16,8 @@ export class Player extends Entity {
 
     // Variables
     private maxRadius: number = 0;
+    public static PosX: number = 0; 
+    public static PosY: number = 0; 
 
     constructor() {
         super();
@@ -94,7 +96,9 @@ export class Player extends Entity {
             }
         }
 
-        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height / 2);
+        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height/2);
+        Player.PosX = this.sprite.position.x;
+        Player.PosY = this.sprite.position.y;
     }
 
     private placePlayerInsideArenaBoundary(): void {
@@ -116,7 +120,7 @@ export class Player extends Entity {
     private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
         console.log(Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)));
         console.log(`${posX} ${posY}`);
-        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius - 15) {
+        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius-15) {
             return true;
         }
         return false;
@@ -147,7 +151,7 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = -1;
+        this.sprite.scale.x = -1;  
         this.armSprite.scale.x = -1;
     }
 
