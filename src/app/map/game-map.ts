@@ -24,21 +24,6 @@ export class GameMap {
     }
 
     /**
-     * Calls the API for the default lobby.
-     * @returns 
-     */
-    public loadDefaultLobby(): void {
-        this.webService.loadLobby().then(
-            (data: any) => {
-                console.log(data);
-            },
-            (err: any) => {
-                console.error(err);
-            }
-        );
-    }
-
-    /**
      * Runs from the Main Game Loop
      * @param delta delta time
      */

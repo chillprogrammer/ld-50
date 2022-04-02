@@ -48,7 +48,6 @@ export class Game {
      */
     createMainMenu(): void {
         this.mainMenu = new MainMenu();
-        this.startingGameSubscription = this.mainMenu.getStartingGameObservable().subscribe((name: string) => this.startGame(name));
     }
 
     /**
@@ -63,11 +62,9 @@ export class Game {
     /**
      * Starts the game.
      */
-    startGame(name: string): void {
-        console.log(`Starting game as: ${name}`);
-        this.destroyMainMenu();
+    startGame(): void {
+        console.log(`Starting game`);
         this.gameMap = new GameMap();
-        this.gameMap.loadDefaultLobby();
     }
 
     /**
@@ -93,7 +90,7 @@ export class Game {
             if (this.titleScreen.isDestroyed) {
                 this.titleScreen.destroy();
                 this.titleScreen = null;
-                this.createMainMenu();
+                this.startGame();
             }
         }
 
