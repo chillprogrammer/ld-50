@@ -19,7 +19,6 @@ export class Game {
 
     // Services
     private graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
-    private messageService: MessageService = ServiceInjector.getServiceByClass(MessageService);
 
 
     // Subscriptions
@@ -65,6 +64,7 @@ export class Game {
     startGame(): void {
         console.log(`Starting game`);
         this.gameMap = new GameMap();
+        this.graphicsManagerService.addChild(this.gameMap.getContainer())
     }
 
     /**
