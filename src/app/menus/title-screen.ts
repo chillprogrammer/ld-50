@@ -105,7 +105,7 @@ export class TitleScreen {
      * Creates text for Title.
      */
     private createTitleText(): void {
-        this.titleText = new Text("*Game Title Goes Here*", { fontSize: 72, fill: this.titleColor, align: 'center', strokeThickness: 2 });
+        this.titleText = new Text("GLADIATOR GAME", { fontSize: 72, fill: this.titleColor, align: 'center', strokeThickness: 2 });
         this.titleText.resolution = 2; // Crisp text.
         this.titleText.anchor.set(0.5);
         this.titleText.position.set((GraphicsManagerService.INITIAL_WIDTH / 2), 150);

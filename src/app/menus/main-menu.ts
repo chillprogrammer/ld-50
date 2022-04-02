@@ -1,6 +1,5 @@
 import { Container, Text } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
-import { MessageService } from "../../services/message-service/message.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Button, ButtonInterface } from "../components/button";
 import { InputBox, InputBoxInterface } from "../components/input";
@@ -13,17 +12,15 @@ export class MainMenu {
 
     // Services
     private graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
-    private messageService: MessageService = ServiceInjector.getServiceByClass(MessageService);
 
 
     // Pixi.js
     private container: Container = null;
 
     // Messages
-    private JOIN_WORLD: string = this.messageService.getMessage('JOIN_WORLD');
-    private NAME: string = this.messageService.getMessage('NAME');
-    private ENTER_A_NAME: string = this.messageService.getMessage('ENTER_A_NAME');
-
+    private JOIN_WORLD: string = "Join World";
+    private NAME: string = "Name"
+    private ENTER_A_NAME: string = "Enter a name"
     // Defaults
     private DEFAULT_NAME: string = 'Joel';
 
