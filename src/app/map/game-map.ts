@@ -41,6 +41,8 @@ export class GameMap {
 
     private init(): void {
         this.container = new Container();
+        this.container.position.x = GraphicsManagerService.INITIAL_WIDTH/2;
+        this.container.position.y = GraphicsManagerService.INITIAL_HEIGHT/2;
         this.godrayFilter = new GodrayFilter();
         this.godrayFilter.time = 0;
         this.godrayFilter.lacunarity = 4.5
@@ -59,7 +61,7 @@ export class GameMap {
     private createArenaCircle(): void {
         this.arenaCircle = new Graphics();
         this.arenaCircle.beginFill(0xd1bdc3);
-        this.arenaCircle.position.set(GraphicsManagerService.INITIAL_WIDTH / 2, GraphicsManagerService.INITIAL_HEIGHT / 2);
+        this.arenaCircle.position.set(0, 0);
         this.arenaCircle.drawCircle(0, 0, this.arenaObject.radius);
         this.arenaCircle.endFill();
         this.arenaCircle.lineStyle(4, 0x000000);
