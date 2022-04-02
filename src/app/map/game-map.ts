@@ -45,7 +45,6 @@ export class GameMap {
         this.godrayFilter.time = 0;
         this.godrayFilter.lacunarity = 4.5
         this.godrayFilter.gain = 0.3;
-        console.log(this.godrayFilter.lacunarity);
         this.container.filters = [this.godrayFilter];
         this.createArenaCircle();
         this.createPlayer();
@@ -53,6 +52,7 @@ export class GameMap {
 
     private createPlayer(): void {
         this.player = new Player();
+        this.player.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.player.getContainer());
     }
 
@@ -90,6 +90,12 @@ export class GameMap {
         }
     }
 
+    private updatePlayer(delta: number): void {
+        if(this.player) {
+            this.player.update(delta);
+        }
+    }
+
     /**
      * Runs from the Main Game Loop
      * @param delta delta time
@@ -97,6 +103,7 @@ export class GameMap {
     public update(delta: number): void {
         // TODO - add update logic
         this.updateGodrays(delta);
+        this.updatePlayer(delta);
     }
 }
 
