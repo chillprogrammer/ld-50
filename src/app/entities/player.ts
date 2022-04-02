@@ -1,4 +1,4 @@
-import { AnimatedSprite, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Point, Sprite, Texture } from "pixi.js";
 import { KeyManagerService } from "../../services/key-manager/key-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Entity, TilesetInterface } from "./base-entity";
@@ -16,8 +16,8 @@ export class Player extends Entity {
 
     // Variables
     private maxRadius: number = 0;
-    public static PosX: number = 0; 
-    public static PosY: number = 0; 
+    public static PosX: number = 0;
+    public static PosY: number = 0;
 
     private mousePosition: any = null;
 
@@ -68,7 +68,7 @@ export class Player extends Entity {
     private loadArmSprite(): void {
         this.armSprite = new Sprite(Texture.from("assets/art/arm.png"))
         this.armSprite.position.set(0, 0)
-        this.armSprite.anchor.set(0.5, 0.5);
+        this.armSprite.anchor.set(0.2, 1);
         this.armSprite.scale.set(1, 1);
         this.container.addChild(this.armSprite);
     }
@@ -77,32 +77,38 @@ export class Player extends Entity {
         this.maxRadius = radius;
     }
 
+    private calculateArmAndSwordPosition(): void {
+        const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
+        const playerPos: { x: number, y: number } = this.sprite.getBounds();
+
+        console.log(`Player: ${playerPos.x}, ${playerPos.y}`);
+        console.log(`Mouse: ${mousePos.x}, ${mousePos.y}`);
+
+        const angle = Math.atan2((mousePos.y - playerPos.y), (mousePos.x - playerPos.x))
+        this.armSprite.rotation = angle;
+        console.log(angle)
+    }
+
     public update(delta: number): void {
         super.update(delta);
 
-        var mousePosition = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
-        console.log(`Player: ${this.sprite.getBounds().x}, ${this.sprite.getBounds().y}`);
-        console.log(`Mouse: ${mousePosition}`);
-
         if (this.isAlive) {
+            this.calculateArmAndSwordPosition();
+
             if (this.keyManagerService.isKeyPressed('w')) {
                 this.moveUp();
             } else if (this.keyManagerService.isKeyPressed('s')) {
                 this.moveDown();
-            } else {
-                //Camera.velocity.y = 0;
             }
             if (this.keyManagerService.isKeyPressed('a')) {
                 this.moveLeft();
             }
             else if (this.keyManagerService.isKeyPressed('d')) {
                 this.moveRight();
-            } else {
-                //Camera.velocity.x = 0;
             }
         }
 
-        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height/2);
+        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height / 2);
         Player.PosX = this.sprite.position.x;
         Player.PosY = this.sprite.position.y;
     }
@@ -124,7 +130,7 @@ export class Player extends Entity {
     }
 
     private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
-        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius-15) {
+        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius - 15) {
             return true;
         }
         return false;
@@ -155,8 +161,8 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = -1;  
-        this.armSprite.scale.x = -1;
+        this.sprite.scale.x = -1;
+        this.armSprite.scale.y = -1;
     }
 
     private moveRight(): void {
@@ -167,7 +173,7 @@ export class Player extends Entity {
             this.placePlayerInsideArenaBoundary();
         }
         this.sprite.scale.x = 1;
-        this.armSprite.scale.x = 1;
+        this.armSprite.scale.y = 1;
     }
 
 
