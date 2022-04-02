@@ -1,6 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
+import { Player } from "../entities/player";
 
 /**
  * This represents the map for all entities to spawn on
@@ -19,6 +20,9 @@ export class GameMap {
     // Services
     private graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
 
+    // Entities
+    private player: Player = null;
+
     constructor() {
         // Default arena settings
         this.arenaObject = {
@@ -34,11 +38,17 @@ export class GameMap {
     private init(): void {
         this.container = new Container();
         this.createArenaCircle();
+        this.createPlayer();
+    }
+
+    private createPlayer(): void {
+        this.player = new Player();
+        this.container.addChild(this.player.getContainer());
     }
 
     private createArenaCircle(): void {
         this.arenaCircle = new Graphics();
-        this.arenaCircle.beginFill(0xFF0000);
+        this.arenaCircle.beginFill(0xd1bdc3);
         this.arenaCircle.position.set(GraphicsManagerService.INITIAL_WIDTH/2, GraphicsManagerService.INITIAL_HEIGHT/2);
         this.arenaCircle.drawCircle(0, 0, this.arenaObject.radius);
         this.arenaCircle.endFill();
