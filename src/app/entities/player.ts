@@ -14,6 +14,8 @@ export class Player extends Entity {
 
     // Variables
     private maxRadius: number = 0;
+    public static PosX: number = 0; 
+    public static PosY: number = 0; 
 
     constructor() {
         super();
@@ -82,6 +84,9 @@ export class Player extends Entity {
             } else {
                 //Camera.velocity.x = 0;
             }
+
+            Player.PosX = this.sprite.position.x;
+            Player.PosY = this.sprite.position.y;
         }
     }
 
@@ -103,6 +108,7 @@ export class Player extends Entity {
     private moveRight(): void {
         this.sprite.position.x += this.movementSpeed * this.delta;
     }
+    
 
 
 }
