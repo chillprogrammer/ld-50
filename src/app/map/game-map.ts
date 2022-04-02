@@ -58,7 +58,7 @@ export class GameMap {
         this.createArenaCircle();
         this.createWallColumnsTop();
         this.createPlayer();
-        this.createEnemy();
+        //this.createEnemy();
         this.createWallColumnsBottom();
     }
 

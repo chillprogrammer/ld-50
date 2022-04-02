@@ -19,6 +19,8 @@ export class Player extends Entity {
     public static PosX: number = 0; 
     public static PosY: number = 0; 
 
+    private mousePosition: any = null;
+
     constructor() {
         super();
         this.init();
@@ -78,6 +80,10 @@ export class Player extends Entity {
     public update(delta: number): void {
         super.update(delta);
 
+        var mousePosition = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
+        console.log(`Player: ${this.sprite.getBounds().x}, ${this.sprite.getBounds().y}`);
+        console.log(`Mouse: ${mousePosition}`);
+
         if (this.isAlive) {
             if (this.keyManagerService.isKeyPressed('w')) {
                 this.moveUp();
@@ -118,8 +124,6 @@ export class Player extends Entity {
     }
 
     private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
-        console.log(Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)));
-        console.log(`${posX} ${posY}`);
         if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius-15) {
             return true;
         }

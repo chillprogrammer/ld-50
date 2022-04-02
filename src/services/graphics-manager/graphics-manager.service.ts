@@ -1,4 +1,4 @@
-import { Application, Container, IApplicationOptions, InteractionEvent, Sprite, Texture } from "pixi.js";
+import { AbstractRenderer, Application, Container, IApplicationOptions, InteractionEvent, Renderer, Sprite, Texture } from "pixi.js";
 import * as PIXI from "pixi.js"
 import { Observable, Subject } from "rxjs";
 
@@ -44,6 +44,10 @@ export class GraphicsManagerService {
 
     public getRendererView(): HTMLCanvasElement {
         return this.app.renderer.view;
+    }
+
+    public getRenderer(): Renderer | AbstractRenderer {
+        return this.app.renderer;
     }
 
     private createBackgroundSprite(): void {
