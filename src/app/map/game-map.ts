@@ -43,8 +43,10 @@ export class GameMap {
 
     private init(): void {
         this.container = new Container();
-        this.container.position.x = GraphicsManagerService.INITIAL_WIDTH/2;
-        this.container.position.y = GraphicsManagerService.INITIAL_HEIGHT/2;
+        this.container.position.x = GraphicsManagerService.INITIAL_WIDTH / 2;
+        this.container.position.y = GraphicsManagerService.INITIAL_HEIGHT / 2;
+        this.container.scale.set(0.88);
+        this.container.position.y += 35
         this.godrayFilter = new GodrayFilter();
         this.godrayFilter.time = 0;
         this.godrayFilter.lacunarity = 4.5
@@ -73,14 +75,15 @@ export class GameMap {
         this.arenaWallColumnsTop = new Sprite();
         this.arenaWallColumnsTop = new Sprite(Texture.from('assets/art/WallColumns.png'))
         //this.arenaWallColumns.scale.set(1.02)
+        this.arenaWallColumnsTop.position.y -= 30;
         this.arenaWallColumnsTop.anchor.set(0.5, 1);
-        this.container.addChild(this.arenaWallColumnsTop);        
+        this.container.addChild(this.arenaWallColumnsTop);
     }
 
     private createWallColumnsBottom(): void {
         this.arenaWallColumnsBottom = new Sprite();
         this.arenaWallColumnsBottom = new Sprite(Texture.from('assets/art/WallColumns2.png'))
-        //this.arenaWallColumns.scale.set(1.02)
+        this.arenaWallColumnsBottom.position.y -= 30;
         this.arenaWallColumnsBottom.anchor.set(0.5, 0);
         this.container.addChild(this.arenaWallColumnsBottom);
     }
@@ -109,7 +112,7 @@ export class GameMap {
     }
 
     private updatePlayer(delta: number): void {
-        if(this.player) {
+        if (this.player) {
             this.player.update(delta);
         }
     }
