@@ -26,7 +26,7 @@ export class Enemy extends Entity {
         this.health = 100;
         this.maxHealth = 100;
         this.shield = 50;
-        this.speed = 1;
+        this.speed = .5;
         this.isAlive = true;
 
         
@@ -55,6 +55,7 @@ export class Enemy extends Entity {
         this.sprite.position.set(GraphicsManagerService.INITIAL_WIDTH / 2, GraphicsManagerService.INITIAL_HEIGHT / 2)
         this.sprite.loop = true;
         this.sprite.animationSpeed = 0.2;
+        this.sprite.anchor.set(0.5, 1);
         this.sprite.scale.set(1, 1);
         this.sprite.play();
     }
@@ -72,38 +73,33 @@ export class Enemy extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos + this.velocity.x * delta,yPos);
+                this.sprite.scale.set(1, 1);
            } else {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos - this.velocity.x * delta,yPos);
+                this.sprite.scale.set(-1, 1);
            }
            
            if (this.sprite.position.y < Player.PosY) {
             let xPos = this.sprite.position.x;
             let yPos = this.sprite.position.y;
             this.sprite.position.set(xPos,yPos + this.velocity.y * delta);
+            
            } else {
             let xPos = this.sprite.position.x;
             let yPos = this.sprite.position.y;
             this.sprite.position.set(xPos,yPos - this.velocity.y * delta);
+            
            }
            
-           /*if (this.sprite.position.x > Player.PosX) {
-                let xPos = this.sprite.position.x;
-                let yPos = this.sprite.position.y;
-                this.sprite.position.set(xPos + this.velocity.x * delta,yPos);
-           } */
+           
 
            
        } 
                 
             
             
-        
-        /*let xPos = this.sprite.position.x;
-        let yPos = this.sprite.position.y;
-        this.sprite.position.set(xPos + this.velocity.x * delta, yPos + (this.velocity.y - 1) * delta); */
-
         
         
 
