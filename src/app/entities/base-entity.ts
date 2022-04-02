@@ -12,10 +12,15 @@ export class Entity {
     protected maxHealth: number;
     protected shield: number;
     protected speed: number;
+    protected isAlive: boolean;
+    protected movementSpeed: number;
 
     // Pixi.js
     protected sprite: AnimatedSprite = null;
     protected container: Container = null;
+
+    // Updates
+    protected delta: number = 0;
 
     /**
      * Creates a default Entity object
@@ -25,6 +30,8 @@ export class Entity {
         this.maxHealth = 100;
         this.shield = 0;
         this.speed = 5;
+        this.isAlive = false;
+        this.movementSpeed = 2;
 
         this.container = new Container();
     }
@@ -91,6 +98,7 @@ export class Entity {
      */
     public update(delta: number) {
         // TODO - enter update logic
+        this.delta = delta;
     }
 
     /**
