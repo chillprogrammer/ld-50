@@ -87,6 +87,14 @@ export class Player extends Entity {
         const angle = Math.atan2((mousePos.y - playerPos.y), (mousePos.x - playerPos.x))
         this.armSprite.rotation = angle;
         console.log(angle)
+
+        if(mousePos.x < playerPos.x) {
+            this.sprite.scale.x = -1;
+            this.armSprite.scale.y = -1;
+        } else {
+            this.sprite.scale.x = 1;
+            this.armSprite.scale.y = 1;   
+        }
     }
 
     public update(delta: number): void {
@@ -161,8 +169,6 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = -1;
-        this.armSprite.scale.y = -1;
     }
 
     private moveRight(): void {
@@ -172,8 +178,6 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = 1;
-        this.armSprite.scale.y = 1;
     }
 
 
