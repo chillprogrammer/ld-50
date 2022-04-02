@@ -1,5 +1,4 @@
-import { AnimatedSprite } from "pixi.js";
-import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
+import { AnimatedSprite, Sprite, Texture } from "pixi.js";
 import { KeyManagerService } from "../../services/key-manager/key-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Entity, TilesetInterface } from "./base-entity";
@@ -8,6 +7,9 @@ export class Player extends Entity {
 
     // Idle Sprite
     private idleSprite: AnimatedSprite = null;
+
+    // Arm Sprite
+    private armSprite: Sprite = null;
 
     // Services
     private keyManagerService: KeyManagerService = ServiceInjector.getServiceByClass(KeyManagerService);
@@ -30,6 +32,7 @@ export class Player extends Entity {
         this.speed = 5;
         this.isAlive = true;
 
+        this.loadArmSprite();
         this.loadIdleSprite();
         this.loadBaseSprite();
     }
@@ -58,6 +61,14 @@ export class Player extends Entity {
         this.sprite.play();
     }
 
+    private loadArmSprite(): void {
+        this.armSprite = new Sprite(Texture.from("assets/art/arm.png"))
+        this.armSprite.position.set(0, 0)
+        this.armSprite.anchor.set(0.5, 0.5);
+        this.armSprite.scale.set(1, 1);
+        this.container.addChild(this.armSprite);
+    }
+
     public setMaxWalkingRadius(radius: number): void {
         this.maxRadius = radius;
     }
@@ -82,6 +93,8 @@ export class Player extends Entity {
                 //Camera.velocity.x = 0;
             }
         }
+
+        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height/2);
     }
 
     private placePlayerInsideArenaBoundary(): void {
@@ -134,6 +147,8 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
+        this.sprite.scale.x = -1;
+        this.armSprite.scale.x = -1;
     }
 
     private moveRight(): void {
@@ -143,6 +158,8 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
+        this.sprite.scale.x = 1;
+        this.armSprite.scale.x = 1;
     }
 
 
