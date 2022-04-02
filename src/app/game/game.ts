@@ -1,6 +1,5 @@
 import { Subscription } from "rxjs";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
-import { MessageService } from "../../services/message-service/message.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { GameMap } from "../map/game-map";
 import { MainMenu } from "../menus/main-menu";

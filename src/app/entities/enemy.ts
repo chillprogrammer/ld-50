@@ -52,7 +52,7 @@ export class Enemy extends Entity {
         const textureList = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
         this.idleSprite = new AnimatedSprite(textureList, true);
         this.sprite = this.idleSprite;
-        this.sprite.position.set(GraphicsManagerService.INITIAL_WIDTH / 2, GraphicsManagerService.INITIAL_HEIGHT / 2)
+        this.sprite.position.set(0, 0);
         this.sprite.loop = true;
         this.sprite.animationSpeed = 0.2;
         this.sprite.anchor.set(0.5, 1);

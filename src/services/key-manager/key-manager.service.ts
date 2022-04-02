@@ -19,7 +19,7 @@ export class KeyManagerService {
      * @param ev 
      */
     private keyDown(ev: KeyboardEvent): void {
-        const key: string = ev.key;
+        const key: string = ev.key.toLowerCase();
         if (!this.keyList.includes(key)) {
             this.keyList.push(key);
 
@@ -38,7 +38,7 @@ export class KeyManagerService {
      * @param ev 
      */
     private keyReleased(ev: KeyboardEvent) {
-        const key: string = ev.key;
+        const key: string = ev.key.toLowerCase();
         if (this.keyList.indexOf(key) >= 0) {
             this.keyList = this.keyList.filter(function (x) {
                 return x !== key;

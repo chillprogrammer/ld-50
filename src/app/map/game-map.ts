@@ -52,8 +52,8 @@ export class GameMap {
         this.container.position.y += 35
         this.godrayFilter = new GodrayFilter();
         this.godrayFilter.time = 0;
-        this.godrayFilter.lacunarity = 4.5
-        this.godrayFilter.gain = 0.3;
+        this.godrayFilter.lacunarity = 2.2
+        this.godrayFilter.gain = 0.5;
         this.container.filters = [this.godrayFilter];
         this.createArenaCircle();
         this.createWallColumnsTop();
