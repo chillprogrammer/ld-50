@@ -14,6 +14,8 @@ export class Player extends Entity {
 
     // Variables
     private maxRadius: number = 0;
+    public static PosX: number = 0; 
+    public static PosY: number = 0; 
 
     constructor() {
         super();
@@ -50,8 +52,7 @@ export class Player extends Entity {
         const textureList = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
         this.idleSprite = new AnimatedSprite(textureList, true);
         this.sprite = this.idleSprite;
-        this.sprite.position.set(0, 0)
-        this.sprite.anchor.set(0.5, 1);
+        this.sprite.position.set(GraphicsManagerService.INITIAL_WIDTH / 2, GraphicsManagerService.INITIAL_HEIGHT / 2)
         this.sprite.loop = true;
         this.sprite.animationSpeed = 0.2;
         this.sprite.scale.set(1, 1);
@@ -64,6 +65,8 @@ export class Player extends Entity {
 
     public update(delta: number): void {
         super.update(delta);
+
+        console.log(this.sprite.position)
 
         if (this.isAlive) {
             if (this.keyManagerService.isKeyPressed('w')) {
@@ -81,69 +84,31 @@ export class Player extends Entity {
             } else {
                 //Camera.velocity.x = 0;
             }
-        }
-    }
 
-    private placePlayerInsideArenaBoundary(): void {
-        while (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
-            if (this.sprite.position.x > 0) {
-                this.sprite.position.x--;
-            } else {
-                this.sprite.position.x++
-            }
-
-            if (this.sprite.position.y > 0) {
-                this.sprite.position.y--;
-            } else {
-                this.sprite.position.y++
-            }
+            Player.PosX = this.sprite.position.x;
+            Player.PosY = this.sprite.position.y;
         }
-    }
-
-    private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
-        console.log(Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)));
-        console.log(`${posX} ${posY}`);
-        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius-15) {
-            return true;
-        }
-        return false;
     }
 
     private moveUp(): void {
-        let newPosY = this.sprite.position.y - (this.movementSpeed * this.delta);
-        if (!this.isPositionOutsideOfRadius(this.sprite.position.x, newPosY)) {
-            this.sprite.position.y = newPosY;
-        } else {
-            this.placePlayerInsideArenaBoundary();
+        this.sprite.position.y -= this.movementSpeed * this.delta;
+        /*let newPosY = this.sprite.position.y - this.movementSpeed * this.delta;
+        if (Math.abs(newPosY) >= (GraphicsManagerService.INITIAL_HEIGHT / 2) - this.maxRadius) {
+            newPosY = (GraphicsManagerService.INITIAL_HEIGHT / 2) - this.maxRadius;
         }
+        this.sprite.position.y = newPosY;
+        */
     }
-
     private moveDown(): void {
-        let newPosY = this.sprite.position.y + (this.movementSpeed * this.delta);
-        if (!this.isPositionOutsideOfRadius(this.sprite.position.x, newPosY)) {
-            this.sprite.position.y = newPosY;
-        } else {
-            this.placePlayerInsideArenaBoundary();
-        }
+        this.sprite.position.y += this.movementSpeed * this.delta;
     }
-
     private moveLeft(): void {
-        let newPosX = this.sprite.position.x - (this.movementSpeed * this.delta);
-        if (!this.isPositionOutsideOfRadius(newPosX, this.sprite.position.y)) {
-            this.sprite.position.x = newPosX;
-        } else {
-            this.placePlayerInsideArenaBoundary();
-        }
+        this.sprite.position.x -= this.movementSpeed * this.delta;
     }
-
     private moveRight(): void {
-        let newPosX = this.sprite.position.x + (this.movementSpeed * this.delta);
-        if (!this.isPositionOutsideOfRadius(newPosX, this.sprite.position.y)) {
-            this.sprite.position.x = newPosX;
-        } else {
-            this.placePlayerInsideArenaBoundary();
-        }
+        this.sprite.position.x += this.movementSpeed * this.delta;
     }
+    
 
 
 }
