@@ -9,9 +9,6 @@ export class Enemy extends Entity {
     private idleTextures: Texture[] = [Texture.EMPTY];
     private walkTextures: Texture[] = [Texture.EMPTY];
 
-    public velocity: PIXI.Point;
-
-
     // Variables
     private maxRadius: number = 0;
 
@@ -41,21 +38,32 @@ export class Enemy extends Entity {
         
         this.loadWalkSprite();
         this.loadBaseSprite();
-        this.loadDeathSounds();
+        this.loadSounds();
     }
 
-    private loadDeathSounds(): void {
+    private loadSounds(): void {
         this.deathSounds = [
             'assets/sounds/whiny_nooo.wav',
             'assets/sounds/weep.wav',
             'assets/sounds/uhhhh.wav',
             'assets/sounds/gah.wav'
         ]
+        this.damageSounds = [
+            'assets/sounds/tis_but_a_scratch.wav',
+        ]
     }
 
     private loadBaseSprite(): void {
         this.sprite = new AnimatedSprite([Texture.EMPTY], true);
-        this.sprite.position.set(0, -260)
+        let x = Math.round(Math.random());
+
+        if(x == 1) {
+            this.sprite.position.set(0, -260);
+        } else {
+            this.sprite.position.set(0, 320);
+        }
+        this.hasEnteredArena = false;
+
         this.sprite.anchor.set(0.5, 1);
         this.sprite.loop = true;
         this.sprite.animationSpeed = this.speed/3;

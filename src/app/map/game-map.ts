@@ -2,6 +2,7 @@ import { GodrayFilter } from "@pixi/filter-godray";
 import { Container, Graphics, NineSlicePlane, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
+import { Entity } from "../entities/base-entity";
 import { Bellhead } from "../entities/Bellhead";
 import { Enemy } from "../entities/enemy";
 import { EntityManager } from "../entities/entity-manager";
@@ -77,7 +78,7 @@ export class GameMap {
 
     private createPlayer(): void {
         this.player = new Player();
-        this.player.setMaxWalkingRadius(this.arenaObject.radius);
+        Entity.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.player.getContainer());
     }
 
