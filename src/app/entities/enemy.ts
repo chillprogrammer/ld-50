@@ -1,3 +1,4 @@
+import { Howl } from "howler";
 import * as PIXI from "pixi.js"
 import { AnimatedSprite, Texture } from "pixi.js";
 import { Entity, TilesetInterface } from "./base-entity";
@@ -40,6 +41,16 @@ export class Enemy extends Entity {
         
         this.loadWalkSprite();
         this.loadBaseSprite();
+        this.loadDeathSounds();
+    }
+
+    private loadDeathSounds(): void {
+        this.deathSounds = [
+            'assets/sounds/whiny_nooo.wav',
+            'assets/sounds/weep.wav',
+            'assets/sounds/uhhhh.wav',
+            'assets/sounds/gah.wav'
+        ]
     }
 
     private loadBaseSprite(): void {

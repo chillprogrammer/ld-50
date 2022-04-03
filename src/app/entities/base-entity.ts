@@ -1,6 +1,8 @@
+import { Howl } from "howler";
 import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
+import { SoundManagerService } from "../../services/sound-manager/sound-manager.service";
 
 /**
  * The base Entity class.
@@ -18,6 +20,9 @@ export class Entity {
     protected movementSpeed: number;
     protected damageCooldown: number = 0;
 
+    protected deathSounds: string[] = [];
+    protected damageSounds: string[] = [];
+
     private bloodTextures: Texture[] = [
         Texture.from('assets/art/blood.png'),
         Texture.from('assets/art/blood2.png'),
@@ -32,6 +37,7 @@ export class Entity {
 
     // Service
     protected graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
+    protected soundManagerService: SoundManagerService = ServiceInjector.getServiceByClass(SoundManagerService);
 
     // Updates
     protected delta: number = 0;
@@ -78,6 +84,13 @@ export class Entity {
         if (this.damageCooldown <= 0) {
             this.damageCooldown = 3;
             this.health -= 10;
+        }
+    }
+
+    protected death(): void {
+        if (this.deathSounds.length > 0) {
+            const deathSound = this.deathSounds[this.deathSounds.length * Math.random() | 0];
+            this.soundManagerService.playSound(deathSound);
         }
     }
 
@@ -129,6 +142,7 @@ export class Entity {
             this.sprite.textures = this.bloodTextures;
             this.sprite.gotoAndStop(Math.floor((Math.random() + 1) * 4));
             this.container.zIndex = 0;
+            this.death();
         }
 
         if (this.damageCooldown > 0) {

@@ -28,7 +28,12 @@ export class SoundManagerService {
         if (filteredSoundList.length > 0) {
             filteredSoundList[0].sound.play();
         } else {
-            console.error(`sound: ${src} doesn't exist`)
+            this.addSound({
+                src: src,
+                autoplay: true,
+                loop: false,
+                volume: 0.5
+            });
         }
     }
 
@@ -41,7 +46,7 @@ export interface AddSoundOptions {
     src: string,
     autoplay: boolean,
     loop: boolean,
-    volume: 0.5,
+    volume: number,
     onend?: Function
 }
 
