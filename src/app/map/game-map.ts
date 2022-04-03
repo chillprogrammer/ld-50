@@ -4,6 +4,7 @@ import { GraphicsManagerService } from "../../services/graphics-manager/graphics
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Bellhead } from "../entities/Bellhead";
 import { Enemy } from "../entities/enemy";
+import { EntityManager } from "../entities/entity-manager";
 import { Player } from "../entities/player";
 import { Torch } from "../entities/Torch";
 
@@ -30,6 +31,7 @@ export class GameMap {
     private graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
 
     // Entities
+    private entityManager: EntityManager = null;
     private player: Player = null;
     private enemy: Enemy = null;
     private bellhead: Bellhead = null;
@@ -52,6 +54,7 @@ export class GameMap {
 
     private init(): void {
         this.container = new Container();
+        this.container.sortableChildren = true;
         this.container.position.x = GraphicsManagerService.INITIAL_WIDTH / 2;
         this.container.position.y = GraphicsManagerService.INITIAL_HEIGHT / 2;
         this.container.scale.set(0.88);
@@ -64,27 +67,18 @@ export class GameMap {
         this.createArenaBackground();
         this.createArenaCircle();
         this.createWallColumnsTop();
-        this.createBellhead();
         this.createPlayer();
         this.createWallColumnsBottom();
         this.createArenaStands();
         this.createTorch();
+        this.entityManager = new EntityManager();
+        this.entityManager.setContainer(this.container)
     }
 
     private createPlayer(): void {
         this.player = new Player();
         this.player.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.player.getContainer());
-    }
-
-    private createEnemy(): void {
-        this.enemy = new Enemy();
-        this.container.addChild(this.enemy.getContainer());
-    }
-
-    private createBellhead(): void {
-        this.bellhead = new Bellhead();
-        this.container.addChild(this.bellhead.getContainer());
     }
 
     private createTorch(): void {
@@ -109,7 +103,6 @@ export class GameMap {
     private createWallColumnsTop(): void {
         this.arenaWallColumnsTop = new Sprite();
         this.arenaWallColumnsTop = new Sprite(Texture.from('assets/art/WallColumns.png'))
-        //this.arenaWallColumns.scale.set(1.02)
         this.arenaWallColumnsTop.position.y -= 30;
         this.arenaWallColumnsTop.anchor.set(0.5, 1);
         this.container.addChild(this.arenaWallColumnsTop);
@@ -120,6 +113,7 @@ export class GameMap {
         this.arenaWallColumnsBottom = new Sprite(Texture.from('assets/art/WallColumns2.png'))
         this.arenaWallColumnsBottom.position.y -= 30;
         this.arenaWallColumnsBottom.anchor.set(0.5, 0);
+        this.arenaWallColumnsBottom.zIndex = 1000;
         this.container.addChild(this.arenaWallColumnsBottom);
     }
 
@@ -129,7 +123,7 @@ export class GameMap {
         this.arenaStands.position.y -= 90;
         this.arenaStands.anchor.set(0.5);
         this.container.addChild(this.arenaStands);
-    } 
+    }
 
 
     /**
@@ -160,15 +154,9 @@ export class GameMap {
         }
     }
 
-    private updateEnemy(delta: number): void {
-        if (this.enemy) {
-            this.enemy.update(delta);
-        }
-    }
-
-    private updateBellhead(delta: number): void {
-        if (this.bellhead) {
-            this.bellhead.update(delta);
+    private updateEntityManager(delta: number): void {
+        if (this.entityManager) {
+            this.entityManager.update(delta);
         }
     }
 
@@ -180,7 +168,7 @@ export class GameMap {
         // TODO - add update logic
         this.updateGodrays(delta);
         this.updatePlayer(delta);
-        this.updateBellhead(delta);
+        this.updateEntityManager(delta);
     }
 }
 
