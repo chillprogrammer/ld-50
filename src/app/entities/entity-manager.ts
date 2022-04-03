@@ -20,6 +20,8 @@ export class EntityManager {
         this.container = container;
         this.spawnEntity(0);
         this.spawnEntity(1);
+
+        
     }
 
     /**
@@ -79,6 +81,7 @@ export class EntityManager {
             default: // Bellhead
                 entity = new Bellhead();
                 break;
+            
         }
 
         if (entity) {
