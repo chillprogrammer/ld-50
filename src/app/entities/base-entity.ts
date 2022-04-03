@@ -1,4 +1,3 @@
-import { Howl } from "howler";
 import { AnimatedSprite, Container, MIPMAP_MODES, Point, Rectangle, SCALE_MODES, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
@@ -19,7 +18,7 @@ export class Entity {
     protected speed: number;
     public isAlive: boolean;
     protected movementSpeed: number;
-    protected damageCooldown: number = 0;
+    public damageCooldown: number = 0;
     protected static maxRadius: number = 0;
 
     protected deathSounds: string[] = [];
@@ -90,16 +89,14 @@ export class Entity {
     }
 
     public takeDamage(): void {
-        if (this.isAlive) {
-            if (this.damageCooldown <= 0) {
-                this.sprite.tint = 0xff0000;
-                this.damageCooldown = 20;
-                this.health -= 50;
+        if (this.isAlive && this.damageCooldown <= 0) {
+            this.sprite.tint = 0xff0000;
+            this.damageCooldown = 50;
+            this.health -= 50;
 
-                if (this.health > 0) {
-                    const damageSound = this.damageSounds[this.damageSounds.length * Math.random() | 0];
-                    this.soundManagerService.playSound(damageSound);
-                }
+            if (this.health > 0) {
+                const damageSound = this.damageSounds[this.damageSounds.length * Math.random() | 0];
+                this.soundManagerService.playSound(damageSound);
             }
         }
     }
