@@ -9,6 +9,8 @@ export class Bellhead extends Entity {
     private walkTextures: Texture[] = [Texture.EMPTY];
     private attackTextures: Texture[] = [Texture.EMPTY];
 
+    private shockwaveSprite: AnimatedSprite;
+
     constructor() {
         super();
         this.init();
@@ -31,6 +33,24 @@ export class Bellhead extends Entity {
         this.loadWalkSprite();
         this.loadAttackSprite();
         this.loadDeathSounds();
+        this.loadShockwaveSprite();
+    }
+
+    private loadShockwaveSprite(): void {
+        const tilesetInterface: TilesetInterface = {
+            tileCount: 5,
+            tileWidth: 128,
+            tileHeight: 32,
+            columnCount: 5,
+            spritesheetName: "Shockwave.png"
+        }
+        const shockwaveTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
+
+        this.shockwaveSprite = new AnimatedSprite(shockwaveTextures, true);
+        this.shockwaveSprite.loop = false;
+        this.shockwaveSprite.animationSpeed = 0.15;
+        this.shockwaveSprite.anchor.set(0.5, 0.5);
+        this.shockwaveSprite.scale.set(3, 3);
     }
 
     private loadBaseSprite(): void {
@@ -72,8 +92,6 @@ export class Bellhead extends Entity {
         this.deathSounds = [
             'assets/sounds/british_its_just_a_flesh_wound.wav',
             'assets/sounds/stupid_ahh.wav',
-
-
         ]
     }
 
@@ -92,19 +110,38 @@ export class Bellhead extends Entity {
 
     public attack(): void {
         if (this.attackCooldown <= 0) {
-            this.attackCooldown = 500;
+            this.attackCooldown = 250;
             super.attack();
             this.sprite.textures = this.attackTextures;
             this.sprite.onLoop = () => {
-                this.attacking = false;
-                this.sprite.textures = this.walkTextures;
-                this.sprite.play();
-
+                if (this.sprite.textures === this.attackTextures) {
+                    this.attacking = false;
+                    this.sprite.textures = this.walkTextures;
+                    this.sprite.play();
+                }
             }
+
+            this.sprite.onFrameChange = (frame: number) => {
+                if (this.sprite.textures === this.attackTextures) {
+                    if (frame === 7) {
+                        this.playShockwave();
+                    }
+                }
+            }
+
             this.sprite.play();
+
         }
     }
 
+    private playShockwave(): void {
+        this.shockwaveSprite.position.set(this.sprite.position.x, this.sprite.position.y);
+        this.container.addChild(this.shockwaveSprite);
+        this.shockwaveSprite.gotoAndPlay(0);
+        this.shockwaveSprite.onComplete = () => {
+            this.container.removeChild(this.shockwaveSprite);
+        }
+    }
 
     update(delta: number): void {
 
