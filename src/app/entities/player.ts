@@ -40,6 +40,7 @@ export class Player extends Entity {
         this.loadIdleSprite();
         this.loadWalkSprite();
         this.loadBaseSprite();
+        this.loadDeathSounds();
     }
 
     private loadBaseSprite(): void {
@@ -91,6 +92,14 @@ export class Player extends Entity {
         this.swordSprite.scale.set(1.5, 1.5);
         this.armSprite.addChild(this.swordSprite);
     }
+
+    private loadDeathSounds(): void {
+        this.deathSounds = [
+            'assets/sounds/uhhhh.wav'
+        
+        ]
+    }
+
 
     private calculateArmAndSwordAngle(): void {
         const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;

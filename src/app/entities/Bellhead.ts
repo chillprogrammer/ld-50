@@ -33,6 +33,7 @@ export class Bellhead extends Entity {
 
         this.loadWalkSprite();
         this.loadBaseSprite();
+        this.loadDeathSounds();
     }
 
     private loadBaseSprite(): void {
@@ -57,6 +58,15 @@ export class Bellhead extends Entity {
         this.sprite.anchor.set(0.58, 1);
         this.sprite.scale.set(1, 1);
         this.sprite.play();
+    }
+
+    private loadDeathSounds(): void {
+        this.deathSounds = [
+            'assets/sounds/british_its_just_a_flesh_wound.wav',
+            'assets/sounds/stupid_ahh.wav',
+            
+            
+        ]
     }
 
     public takeDamage(): void {
