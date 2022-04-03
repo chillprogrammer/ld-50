@@ -31,7 +31,7 @@ export class EntityManager {
     public update(delta: number) {
         this.x++;
 
-        if(this.x % 10 === 0) {
+        if(this.x % 100 === 0) {
             this.spawnEntity(1);
         }
 

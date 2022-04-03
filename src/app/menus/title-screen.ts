@@ -37,7 +37,10 @@ export class TitleScreen {
 
     // Sounds
     private SOUNDS = {
-        Select: 'assets/sounds/StartGame2.wav'
+        Select: 'assets/sounds/Ludum_Dare_song_seamless_v1.ogg.wav',
+       
+        
+        
     }
 
     // Subscriptions
@@ -131,10 +134,13 @@ export class TitleScreen {
     private loadSounds(): void {
         this.soundManagerService.addSound({
             src: this.SOUNDS.Select,
-            autoplay: false,
-            loop: false,
+            autoplay: true,
+            loop: true,
             volume: 0.5
         });
+
+        this.soundManagerService.playSound('assets/sounds/Ludum_Dare_song_seamless_v1.ogg')
+        
     }
 
     /**

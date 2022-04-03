@@ -1,19 +1,19 @@
 import * as PIXI from "pixi.js"
-import {AnimatedSprite} from "pixi.js";
+import { AnimatedSprite } from "pixi.js";
 import { TestScheduler } from "rxjs/testing";
-import {GraphicsManagerService} from "../../services/graphics-manager/graphics-manager.service";
-import {Entity, TilesetInterface} from "./base-entity";
-import {Player} from "./player";
+import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
+import { Entity, TilesetInterface } from "./base-entity";
+import { Player } from "./player";
 
 export class Bellhead extends Entity {
 
-    private idleSprite : AnimatedSprite = null;
+    private idleSprite: AnimatedSprite = null;
 
-    public velocity : PIXI.Point;
+    public velocity: PIXI.Point;
 
 
     // Variables
-    private maxRadius : number = 0;
+    private maxRadius: number = 0;
 
     constructor() {
         super();
@@ -41,7 +41,7 @@ export class Bellhead extends Entity {
     private loadBaseSprite(): void {
         this.sprite = this.idleSprite;
         this.container.addChild(this.sprite);
-    } 
+    }
 
     private loadWalkSprite(): void {
         const tilesetInterface: TilesetInterface = {
@@ -65,15 +65,25 @@ export class Bellhead extends Entity {
     private loadDeathSounds(): void {
         this.deathSounds = [
             'assets/sounds/british_its_just_a_flesh_wound.wav',
-            'assets/sounds/tis_but_a_scratch.wav',
             'assets/sounds/stupid_ahh.wav',
             
             
         ]
     }
 
+    public takeDamage(): void {
+        super.takeDamage();
 
-    update(delta : number): void {
+        const xDirection: number = this.sprite.position.x - Player.PosX;
+        const yDirection: number = this.sprite.position.y - Player.PosY;
+        this.sprite.position.set(
+            xDirection >= 0 ? this.sprite.position.x + 25 : this.sprite.position.x - 25,
+            yDirection >= 0 ? this.sprite.position.y + 25 : this.sprite.position.y - 25
+        )
+    }
+
+
+    update(delta: number): void {
 
         super.update(delta);
 
@@ -82,7 +92,7 @@ export class Bellhead extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
-                if(Math.abs(xPos - Player.PosX) > 0.5) {
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
                     this.sprite.scale.set(-1, 1);
                 }
             } else {
@@ -90,7 +100,7 @@ export class Bellhead extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
-                if(Math.abs(xPos - Player.PosX) > 0.5) {
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
                     this.sprite.scale.set(1, 1);
                 }
             }
@@ -106,7 +116,7 @@ export class Bellhead extends Entity {
                 this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
 
             }
-            
+
 
 
         }

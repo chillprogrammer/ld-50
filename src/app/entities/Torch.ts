@@ -56,6 +56,8 @@ import { Entity, TilesetInterface } from "./base-entity";
 
         this.sprite = this.torchSprite8;
         this.container.addChild(this.sprite);
+
+        this.container.zIndex = 1001;
     }
 
     private loadIdleSprite1(): void {

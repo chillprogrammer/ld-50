@@ -1,5 +1,5 @@
 import { Howl } from "howler";
-import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Texture } from "pixi.js";
+import { AnimatedSprite, Container, MIPMAP_MODES, Point, Rectangle, SCALE_MODES, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { SoundManagerService } from "../../services/sound-manager/sound-manager.service";
@@ -10,6 +10,7 @@ import { SoundManagerService } from "../../services/sound-manager/sound-manager.
 export class Entity {
 
     public isDestroyed: boolean = false;
+    protected hasEnteredArena: boolean = false;
 
     // Variables
     protected health: number;
@@ -19,6 +20,7 @@ export class Entity {
     public isAlive: boolean;
     protected movementSpeed: number;
     protected damageCooldown: number = 0;
+    protected static maxRadius: number = 0;
 
     protected deathSounds: string[] = [];
     protected damageSounds: string[] = [];
@@ -39,6 +41,8 @@ export class Entity {
     protected graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
     protected soundManagerService: SoundManagerService = ServiceInjector.getServiceByClass(SoundManagerService);
 
+    protected velocity: Point;
+
     // Updates
     protected delta: number = 0;
 
@@ -54,6 +58,11 @@ export class Entity {
         this.movementSpeed = 2;
 
         this.container = new Container();
+    }
+
+
+    public static setMaxWalkingRadius(radius: number): void {
+        Entity.maxRadius = radius;
     }
 
     protected loadTileSetIntoMemory(params: TilesetInterface): Texture[] {
@@ -81,9 +90,17 @@ export class Entity {
     }
 
     public takeDamage(): void {
-        if (this.damageCooldown <= 0) {
-            this.damageCooldown = 3;
-            this.health -= 10;
+        if (this.isAlive) {
+            if (this.damageCooldown <= 0) {
+                this.sprite.tint = 0xff0000;
+                this.damageCooldown = 100;
+                this.health -= 50;
+
+                if (this.health > 0) {
+                    const damageSound = this.damageSounds[this.damageSounds.length * Math.random() | 0];
+                    this.soundManagerService.playSound(damageSound);
+                }
+            }
         }
     }
 
@@ -125,12 +142,40 @@ export class Entity {
      */
     public getSpeed(): number { return this.speed; }
 
+    protected placeEntityInsideArenaBoundary(): void {
+        if (this.hasEnteredArena) {
+            while (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
+                if (this.sprite.position.x > 0) {
+                    this.sprite.position.x--;
+                } else {
+                    this.sprite.position.x++
+                }
+
+                if (this.sprite.position.y > 0) {
+                    this.sprite.position.y--;
+                } else {
+                    this.sprite.position.y++
+                }
+            }
+        }
+    }
+
+    protected isPositionOutsideOfRadius(posX: number, posY: number): boolean {
+        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= Entity.maxRadius - 15) {
+            return true;
+        }
+        this.hasEnteredArena = true;
+        return false;
+    }
 
     /**
      * Runs each tick.
      * @param delta delta time
      */
     public update(delta: number) {
+        if (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
+            this.placeEntityInsideArenaBoundary();
+        }
         // TODO - enter update logic
         this.delta = delta;
         if (this.isAlive) {
@@ -147,6 +192,8 @@ export class Entity {
 
         if (this.damageCooldown > 0) {
             this.damageCooldown--;
+        } else {
+            this.sprite.tint = 0xffffff;
         }
     }
 
