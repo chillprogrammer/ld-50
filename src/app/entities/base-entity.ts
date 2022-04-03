@@ -19,6 +19,7 @@ export class Entity {
     public isAlive: boolean;
     protected movementSpeed: number;
     public damageCooldown: number = 0;
+    public attackCooldown: number = 0;
     protected static maxRadius: number = 0;
 
     protected attacking: boolean = false;
@@ -196,9 +197,13 @@ export class Entity {
         }
 
         if (this.damageCooldown > 0) {
-            this.damageCooldown--;
+            this.damageCooldown -= 1*delta;;
         } else {
             this.sprite.tint = 0xffffff;
+        }
+
+        if (this.attackCooldown > 0) {
+            this.attackCooldown -= 1*delta;;
         }
     }
 

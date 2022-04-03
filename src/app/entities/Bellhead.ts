@@ -91,17 +91,18 @@ export class Bellhead extends Entity {
     }
 
     public attack(): void {
-        super.attack();
-        this.attacking = true;
-        this.sprite.textures = this.attackTextures;
-        this.sprite.onLoop = () => {
-            console.log("HERE")
-            this.attacking = false;
-            this.sprite.textures = this.walkTextures;
-            this.sprite.play();
+        if (this.attackCooldown <= 0) {
+            this.attackCooldown = 500;
+            super.attack();
+            this.sprite.textures = this.attackTextures;
+            this.sprite.onLoop = () => {
+                this.attacking = false;
+                this.sprite.textures = this.walkTextures;
+                this.sprite.play();
 
+            }
+            this.sprite.play();
         }
-        this.sprite.play();
     }
 
 
