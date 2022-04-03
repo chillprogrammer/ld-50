@@ -104,7 +104,7 @@ export class Entity {
     public update(delta: number) {
         // TODO - enter update logic
         this.delta = delta;
-        
+        this.container.zIndex=this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT/2;
     }
 
     /**

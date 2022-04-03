@@ -38,6 +38,7 @@ export class Enemy extends Entity {
 
     private loadBaseSprite(): void {
         this.sprite = this.idleSprite;
+        this.sprite.tint = 0xff8888;
         this.container.addChild(this.sprite);
     }
 

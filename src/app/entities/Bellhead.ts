@@ -27,7 +27,7 @@ export class Bellhead extends Entity {
         this.health = 100;
         this.maxHealth = 100;
         this.shield = 50;
-        this.speed = .5;
+        this.speed = 0.2;
         this.isAlive = true;
 
 
@@ -51,12 +51,11 @@ export class Bellhead extends Entity {
             spritesheetName: "Bellhead_Walk.png"
         }
         const textureList = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
-        console.log(textureList);
         this.idleSprite = new AnimatedSprite(textureList, true);
         this.sprite = this.idleSprite;
-        this.sprite.position.set(0, -300);
+        this.sprite.position.set(0, -250);
         this.sprite.loop = true;
-        this.sprite.animationSpeed = 0.2;
+        this.sprite.animationSpeed = 0.15;
         this.sprite.anchor.set(0.58, 1);
         this.sprite.scale.set(1, 1);
         this.sprite.play();
@@ -75,10 +74,6 @@ export class Bellhead extends Entity {
                 if(Math.abs(xPos - Player.PosX) > 0.3) {
                     this.sprite.scale.set(-1, 1);
                 }
-                
-                
-            console.log(xPos - Player.PosX)
-
             } else {
 
                 let xPos = this.sprite.position.x;
