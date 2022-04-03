@@ -37,7 +37,7 @@ export class Enemy extends Entity {
 
         this.velocity = new PIXI.Point(this.speed, this.speed);
 
-        this.loadIdleSprite();
+        
         this.loadWalkSprite();
         this.loadBaseSprite();
     }
@@ -54,24 +54,14 @@ export class Enemy extends Entity {
         this.container.addChild(this.sprite);
     }
 
-    private loadIdleSprite(): void {
-        const tilesetInterface: TilesetInterface = {
-            tileCount: 8,
-            tileWidth: 32,
-            tileHeight: 47,
-            columnCount: 8,
-            spritesheetName: "gladiator-idle.png"
-        }
-        this.idleTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
-    }
 
     private loadWalkSprite() {
         const tilesetInterface: TilesetInterface = {
             tileCount: 8,
-            tileWidth: 32,
-            tileHeight: 47,
+            tileWidth: 64,
+            tileHeight: 64,
             columnCount: 8,
-            spritesheetName: "Glad_Walk.png"
+            spritesheetName: "SpearMan_Walk.png"
         }
         this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
     }
@@ -92,7 +82,7 @@ export class Enemy extends Entity {
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
                 if (Math.abs(xPos - Player.PosX) > 0.5) {
-                    this.sprite.scale.set(1, 1);
+                    this.sprite.scale.set(-1, 1);
                     moving = true;
                 }
             } else {
@@ -100,7 +90,7 @@ export class Enemy extends Entity {
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
                 if (Math.abs(xPos - Player.PosX) > 0.5) {
-                    this.sprite.scale.set(-1, 1);
+                    this.sprite.scale.set(1, 1);
                     moving = true;
                 }
             }
