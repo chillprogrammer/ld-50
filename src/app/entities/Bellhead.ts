@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js"
-import { AnimatedSprite, Texture } from "pixi.js";
+import { AnimatedSprite, Sprite, Texture } from "pixi.js";
 import { Entity, TilesetInterface } from "./base-entity";
 import { Player } from "./player";
 
@@ -50,7 +50,7 @@ export class Bellhead extends Entity {
         this.shockwaveSprite.loop = false;
         this.shockwaveSprite.animationSpeed = 0.15;
         this.shockwaveSprite.anchor.set(0.5, 0.5);
-        this.shockwaveSprite.scale.set(3, 3);
+        this.shockwaveSprite.scale.set(2, 3);
     }
 
     private loadBaseSprite(): void {
@@ -59,7 +59,7 @@ export class Bellhead extends Entity {
         this.sprite.position.set(0, -250);
         this.sprite.loop = true;
         this.sprite.animationSpeed = 0.15;
-        this.sprite.anchor.set(0.58, 1);
+        this.sprite.anchor.set(0.58, 0.8);
         this.sprite.scale.set(1, 1);
 
     }
@@ -138,23 +138,45 @@ export class Bellhead extends Entity {
     }
 
     private playShockwave(): void {
-        this.shockwaveSprite.position.set(this.sprite.position.x, this.sprite.position.y);
+        this.shockwaveSprite.position.set(this.sprite.position.x, this.sprite.position.y-10);
+        this.shockwaveSprite.visible = true;
         this.container.addChild(this.shockwaveSprite);
         this.shockwaveSprite.gotoAndPlay(0);
         this.shockwaveSprite.onComplete = () => {
+            this.shockwaveSprite.visible = false;
             this.container.removeChild(this.shockwaveSprite);
         }
     }
 
-    update(delta: number): void {
+    private isCollidingWithPlayer(sprite: Sprite): boolean {
+        const ab = Player.playerSprite.getBounds();
+        const bb = sprite.getBounds();
+        return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
+    }
 
+    private checkPlayerDamageFromShockwave(): void {
+        if (this.shockwaveSprite.visible) {
+            if (this.isCollidingWithPlayer(this.shockwaveSprite)) {
+                Player.playerEntity.takeDamage(20);
+            }
+        }
+    }
+
+    update(delta: number): void {
         super.update(delta);
+
+        this.checkPlayerDamageFromShockwave();
 
         if (this.isAlive) {
             let xPos = this.sprite.position.x;
             let yPos = this.sprite.position.y;
             if (Math.abs(xPos - Player.PosX) < this.agroDistance && Math.abs(yPos - Player.PosY) < this.agroDistance && !this.attacking) {
                 this.attack();
+            }
+
+
+            if (!Player.playerIsAlive) {
+                return;
             }
 
             if (!this.attacking) {

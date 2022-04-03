@@ -87,6 +87,10 @@ export class Enemy extends Entity {
 
         if (this.isAlive) {
             let moving = false;
+            
+            if(!Player.playerIsAlive) {
+                return;
+            }
 
             if (this.sprite.position.x < Player.PosX) {
                 let xPos = this.sprite.position.x;

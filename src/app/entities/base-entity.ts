@@ -97,11 +97,11 @@ export class Entity {
         this.attacking = true;
     }
 
-    public takeDamage(): void {
+    public takeDamage(damage?: number): void {
         if (this.isAlive && this.damageCooldown <= 0) {
             this.sprite.tint = 0xff0000;
             this.damageCooldown = 50;
-            this.health -= 50;
+            this.health -= damage ?? 50;
 
             if (this.health > 0) {
                 const damageSound = this.damageSounds[this.damageSounds.length * Math.random() | 0];
@@ -197,13 +197,13 @@ export class Entity {
         }
 
         if (this.damageCooldown > 0) {
-            this.damageCooldown -= 1*delta;;
+            this.damageCooldown -= 1 * delta;
         } else {
             this.sprite.tint = 0xffffff;
         }
 
         if (this.attackCooldown > 0) {
-            this.attackCooldown -= 1*delta;;
+            this.attackCooldown -= 1 * delta;;
         }
     }
 

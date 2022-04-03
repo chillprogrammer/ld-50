@@ -11,6 +11,10 @@ export class Player extends Entity {
     private armSprite: Sprite = null;
     private swordSprite: Sprite = null;
 
+    public static playerSprite: Sprite = null;
+    public static playerEntity: Entity = null;
+    public static playerIsAlive: boolean = true;
+
     // Services
     private keyManagerService: KeyManagerService = ServiceInjector.getServiceByClass(KeyManagerService);
 
@@ -52,6 +56,7 @@ export class Player extends Entity {
         this.sprite.scale.set(1, 1);
         this.sprite.play();
         this.container.addChild(this.sprite);
+        Player.playerSprite = this.sprite;
     }
 
     private loadIdleSprite(): void {
@@ -96,7 +101,7 @@ export class Player extends Entity {
     private loadDeathSounds(): void {
         this.deathSounds = [
             'assets/sounds/uhhhh.wav'
-        
+
         ]
     }
 
@@ -120,6 +125,8 @@ export class Player extends Entity {
 
     public update(delta: number): void {
         super.update(delta);
+
+        Player.playerIsAlive = this.isAlive;
 
         if (this.isAlive) {
             this.calculateArmAndSwordAngle();

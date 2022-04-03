@@ -63,7 +63,7 @@ export class GameMap {
         this.godrayFilter = new GodrayFilter();
         this.godrayFilter.time = 14;
         this.godrayFilter.lacunarity = 2.2
-        this.godrayFilter.gain = 0.5;
+        this.godrayFilter.gain = 0.55;
         this.container.filters = [this.godrayFilter];
         this.createArenaBackground();
         this.createArenaCircle();
@@ -78,6 +78,7 @@ export class GameMap {
 
     private createPlayer(): void {
         this.player = new Player();
+        Player.playerEntity = this.player;
         Entity.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.player.getContainer());
     }

@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import { Entity } from "./base-entity";
 import { Bellhead } from "./Bellhead";
 import { Enemy } from "./enemy";
@@ -74,11 +74,17 @@ export class EntityManager {
 
     private checkCollisionWithSword(entity: Entity): void {
         if (this.isCollidingWithSword(entity)) {
-            entity.takeDamage();
+            if (Player.playerIsAlive) {
+                entity.takeDamage();
+            }
         }
     }
 
     spawnEntity(type: number): Entity {
+        if (!Player.playerIsAlive) {
+            return;
+        }
+
         let entity: Entity = null;
         switch (type) {
             case 1:
