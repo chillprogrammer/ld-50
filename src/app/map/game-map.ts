@@ -59,8 +59,8 @@ export class GameMap {
         this.container.filters = [this.godrayFilter];
         this.createArenaCircle();
         this.createWallColumnsTop();
-        this.createPlayer();
         this.createBellhead();
+        this.createPlayer();
         this.createWallColumnsBottom();
     }
 

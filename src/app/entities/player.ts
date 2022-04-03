@@ -6,7 +6,8 @@ import { Entity, TilesetInterface } from "./base-entity";
 export class Player extends Entity {
 
     // Sprites
-    private idleSprite: AnimatedSprite = null;
+    private idleTextures: Texture[] = [Texture.EMPTY];
+    private walkTextures: Texture[] = [Texture.EMPTY];
     private armSprite: Sprite = null;
     private swordSprite: Sprite = null;
 
@@ -37,11 +38,18 @@ export class Player extends Entity {
         this.loadArmSprite();
         this.loadSwordSprite();
         this.loadIdleSprite();
+        this.loadWalkSprite();
         this.loadBaseSprite();
     }
 
     private loadBaseSprite(): void {
-        this.sprite = this.idleSprite;
+        this.sprite = new AnimatedSprite([Texture.EMPTY], true);
+        this.sprite.position.set(0, 0)
+        this.sprite.anchor.set(0.5, 1);
+        this.sprite.loop = true;
+        this.sprite.animationSpeed = 0.2;
+        this.sprite.scale.set(1, 1);
+        this.sprite.play();
         this.container.addChild(this.sprite);
     }
 
@@ -53,15 +61,18 @@ export class Player extends Entity {
             columnCount: 8,
             spritesheetName: "gladiator-idle.png"
         }
-        const textureList = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
-        this.idleSprite = new AnimatedSprite(textureList, true);
-        this.sprite = this.idleSprite;
-        this.sprite.position.set(0, 0)
-        this.sprite.anchor.set(0.5, 1);
-        this.sprite.loop = true;
-        this.sprite.animationSpeed = 0.2;
-        this.sprite.scale.set(1, 1);
-        this.sprite.play();
+        this.idleTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
+    }
+
+    private loadWalkSprite() {
+        const tilesetInterface: TilesetInterface = {
+            tileCount: 8,
+            tileWidth: 32,
+            tileHeight: 47,
+            columnCount: 8,
+            spritesheetName: "Glad_Walk.png"
+        }
+      this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
     }
 
     private loadArmSprite(): void {
@@ -90,7 +101,7 @@ export class Player extends Entity {
         const playerPos: { x: number, y: number } = this.sprite.getBounds();
 
         const angle = Math.atan2((mousePos.y - playerPos.y), (mousePos.x - playerPos.x))
-        this.armSprite.rotation = angle + Math.PI/2;
+        this.armSprite.rotation = angle + Math.PI / 2;
 
         if (mousePos.x < playerPos.x) {
             this.sprite.scale.x = -1;
@@ -106,16 +117,31 @@ export class Player extends Entity {
         if (this.isAlive) {
             this.calculateArmAndSwordAngle();
 
+            let playerMoving = false;
             if (this.keyManagerService.isKeyPressed('w')) {
                 this.moveUp();
+                playerMoving = true;
             } else if (this.keyManagerService.isKeyPressed('s')) {
                 this.moveDown();
+                playerMoving = true;
             }
             if (this.keyManagerService.isKeyPressed('a')) {
                 this.moveLeft();
+                playerMoving = true;
             }
             else if (this.keyManagerService.isKeyPressed('d')) {
                 this.moveRight();
+                playerMoving = true;
+            }
+
+            if (!playerMoving && this.sprite.name !== 'idling') {
+                this.sprite.textures = this.idleTextures;
+                this.sprite.play();
+                this.sprite.name = 'idling';
+            } else if (playerMoving && this.sprite.name !== 'walking') {
+                this.sprite.textures = this.walkTextures;
+                this.sprite.play();
+                this.sprite.name = 'walking';
             }
         }
 
