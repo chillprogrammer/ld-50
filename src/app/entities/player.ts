@@ -15,7 +15,6 @@ export class Player extends Entity {
     private keyManagerService: KeyManagerService = ServiceInjector.getServiceByClass(KeyManagerService);
 
     // Variables
-    private maxRadius: number = 0;
     public static PosX: number = 0;
     public static PosY: number = 0;
     public static SwordBounds: Rectangle = new Rectangle();
@@ -93,10 +92,6 @@ export class Player extends Entity {
         this.armSprite.addChild(this.swordSprite);
     }
 
-    public setMaxWalkingRadius(radius: number): void {
-        this.maxRadius = radius;
-    }
-
     private calculateArmAndSwordAngle(): void {
         const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
         const playerPos: { x: number, y: number } = this.sprite.getBounds();
@@ -153,35 +148,12 @@ export class Player extends Entity {
         Player.PosY = this.sprite.position.y;
     }
 
-    private placePlayerInsideArenaBoundary(): void {
-        while (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
-            if (this.sprite.position.x > 0) {
-                this.sprite.position.x--;
-            } else {
-                this.sprite.position.x++
-            }
-
-            if (this.sprite.position.y > 0) {
-                this.sprite.position.y--;
-            } else {
-                this.sprite.position.y++
-            }
-        }
-    }
-
-    private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
-        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius - 15) {
-            return true;
-        }
-        return false;
-    }
-
     private moveUp(): void {
         let newPosY = this.sprite.position.y - (this.movementSpeed * this.delta);
         if (!this.isPositionOutsideOfRadius(this.sprite.position.x, newPosY)) {
             this.sprite.position.y = newPosY;
         } else {
-            this.placePlayerInsideArenaBoundary();
+            this.placeEntityInsideArenaBoundary();
         }
     }
 
@@ -190,7 +162,7 @@ export class Player extends Entity {
         if (!this.isPositionOutsideOfRadius(this.sprite.position.x, newPosY)) {
             this.sprite.position.y = newPosY;
         } else {
-            this.placePlayerInsideArenaBoundary();
+            this.placeEntityInsideArenaBoundary();
         }
     }
 
@@ -199,7 +171,7 @@ export class Player extends Entity {
         if (!this.isPositionOutsideOfRadius(newPosX, this.sprite.position.y)) {
             this.sprite.position.x = newPosX;
         } else {
-            this.placePlayerInsideArenaBoundary();
+            this.placeEntityInsideArenaBoundary();
         }
     }
 
@@ -208,7 +180,7 @@ export class Player extends Entity {
         if (!this.isPositionOutsideOfRadius(newPosX, this.sprite.position.y)) {
             this.sprite.position.x = newPosX;
         } else {
-            this.placePlayerInsideArenaBoundary();
+            this.placeEntityInsideArenaBoundary();
         }
     }
 
