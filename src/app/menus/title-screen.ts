@@ -37,7 +37,7 @@ export class TitleScreen {
 
     // Sounds
     private SOUNDS = {
-        Select: 'assets/sounds/Ludum_Dare_song_seamless_v1.ogg.wav',
+        Select: 'assets/sounds/Ludum_Dare_song_seamless_v1.ogg',
        
         
         
@@ -139,7 +139,7 @@ export class TitleScreen {
             volume: 0.5
         });
 
-        this.soundManagerService.playSound('assets/sounds/Ludum_Dare_song_seamless_v1.ogg')
+        this.soundManagerService.playSound(this.SOUNDS.Select)
         
     }
 
@@ -147,7 +147,7 @@ export class TitleScreen {
      * Unload any sounds from memory.
      */
     private removeSounds(): void {
-        this.soundManagerService.removeSound(this.SOUNDS.Select);
+        //this.soundManagerService.removeSound(this.SOUNDS.Select);
     }
 
     /**
@@ -156,7 +156,7 @@ export class TitleScreen {
     private goToMainMenu(): void {
         if (!this.isLeavingTitleScreen) {
             this.isLeavingTitleScreen = true;
-            (<SoundManagerService>ServiceInjector.getServiceByClass(SoundManagerService)).playSound(this.SOUNDS.Select)
+//(<SoundManagerService>ServiceInjector.getServiceByClass(SoundManagerService)).playSound(this.SOUNDS.Select)
             this.destroy();
         }
     }

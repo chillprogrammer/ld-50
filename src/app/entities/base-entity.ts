@@ -19,7 +19,12 @@ export class Entity {
     public isAlive: boolean;
     protected movementSpeed: number;
     public damageCooldown: number = 0;
+    public attackCooldown: number = 0;
     protected static maxRadius: number = 0;
+
+    protected attacking: boolean = false;
+
+    protected agroDistance: number = 80;
 
     protected deathSounds: string[] = [];
     protected damageSounds: string[] = [];
@@ -88,11 +93,15 @@ export class Entity {
         return textureList;
     }
 
-    public takeDamage(): void {
+    public attack(): void {
+        this.attacking = true;
+    }
+
+    public takeDamage(damage?: number): void {
         if (this.isAlive && this.damageCooldown <= 0) {
             this.sprite.tint = 0xff0000;
             this.damageCooldown = 50;
-            this.health -= 50;
+            this.health -= damage ?? 50;
 
             if (this.health > 0) {
                 const damageSound = this.damageSounds[this.damageSounds.length * Math.random() | 0];
@@ -188,9 +197,13 @@ export class Entity {
         }
 
         if (this.damageCooldown > 0) {
-            this.damageCooldown--;
+            this.damageCooldown -= 1 * delta;
         } else {
             this.sprite.tint = 0xffffff;
+        }
+
+        if (this.attackCooldown > 0) {
+            this.attackCooldown -= 1 * delta;;
         }
     }
 

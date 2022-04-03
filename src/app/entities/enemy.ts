@@ -9,9 +9,6 @@ export class Enemy extends Entity {
     private idleTextures: Texture[] = [Texture.EMPTY];
     private walkTextures: Texture[] = [Texture.EMPTY];
 
-    // Variables
-    private maxRadius: number = 0;
-
     constructor() {
         super();
         this.init();
@@ -26,8 +23,8 @@ export class Enemy extends Entity {
         this.shield = 50;
         this.speed = .5;
 
-        this.speed = Math.random()*1.2 + 0.2;
-        if(this.speed >= 1.4) {
+        this.speed = Math.random() * 1.2 + 0.2;
+        if (this.speed >= 1.4) {
             this.speed = 1.4;
         }
         this.isAlive = true;
@@ -35,7 +32,7 @@ export class Enemy extends Entity {
 
         this.velocity = new PIXI.Point(this.speed, this.speed);
 
-        
+
         this.loadWalkSprite();
         this.loadBaseSprite();
         this.loadSounds();
@@ -57,7 +54,7 @@ export class Enemy extends Entity {
         this.sprite = new AnimatedSprite([Texture.EMPTY], true);
         let x = Math.round(Math.random());
 
-        if(x == 1) {
+        if (x == 1) {
             this.sprite.position.set(0, -260);
         } else {
             this.sprite.position.set(0, 320);
@@ -66,10 +63,9 @@ export class Enemy extends Entity {
 
         this.sprite.anchor.set(0.5, 1);
         this.sprite.loop = true;
-        this.sprite.animationSpeed = this.speed/3;
+        this.sprite.animationSpeed = this.speed / 3;
         this.sprite.scale.set(1, 1);
         this.sprite.play();
-        //this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
         this.container.addChild(this.sprite);
     }
 
@@ -85,16 +81,16 @@ export class Enemy extends Entity {
         this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
     }
 
-    public setMaxWalkingRadius(radius: number): void {
-        this.maxRadius = radius;
-    }
-
     update(delta: number): void {
 
         super.update(delta);
 
         if (this.isAlive) {
             let moving = false;
+            
+            if(!Player.playerIsAlive) {
+                return;
+            }
 
             if (this.sprite.position.x < Player.PosX) {
                 let xPos = this.sprite.position.x;
