@@ -1,10 +1,11 @@
 import { GodrayFilter } from "@pixi/filter-godray";
-import { Container, Graphics, Sprite, Texture } from "pixi.js";
+import { Container, Graphics, NineSlicePlane, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Bellhead } from "../entities/Bellhead";
 import { Enemy } from "../entities/enemy";
 import { Player } from "../entities/player";
+import { Torch } from "../entities/Torch";
 
 
 /**
@@ -30,6 +31,7 @@ export class GameMap {
     private player: Player = null;
     private enemy: Enemy = null;
     private bellhead: Bellhead = null;
+    private torch: Torch = null;
 
     private godrayFilter: GodrayFilter = null;
 
@@ -62,6 +64,7 @@ export class GameMap {
         this.createBellhead();
         this.createPlayer();
         this.createWallColumnsBottom();
+        this.createTorch();
     }
 
     private createPlayer(): void {
@@ -78,6 +81,11 @@ export class GameMap {
     private createBellhead(): void {
         this.bellhead = new Bellhead();
         this.container.addChild(this.bellhead.getContainer());
+    }
+
+    private createTorch(): void {
+        this.torch = new Torch();
+        this.container.addChild(this.torch.getContainer());
     }
 
     private createArenaCircle(): void {
