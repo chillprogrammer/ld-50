@@ -23,6 +23,8 @@ export class GameMap {
     private arenaCircle: Sprite = null;
     private arenaWallColumnsTop: Sprite = null;
     private arenaWallColumnsBottom: Sprite = null;
+    private arenaStands: Sprite = null;
+    private arenaBackground: Sprite = null;
 
     // Services
     private graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
@@ -59,11 +61,13 @@ export class GameMap {
         this.godrayFilter.lacunarity = 2.2
         this.godrayFilter.gain = 0.5;
         this.container.filters = [this.godrayFilter];
+        this.createArenaBackground();
         this.createArenaCircle();
         this.createWallColumnsTop();
         this.createBellhead();
         this.createPlayer();
         this.createWallColumnsBottom();
+        this.createArenaStands();
         this.createTorch();
     }
 
@@ -86,6 +90,13 @@ export class GameMap {
     private createTorch(): void {
         this.torch = new Torch();
         this.container.addChild(this.torch.getContainer());
+    }
+
+    private createArenaBackground(): void {
+        this.arenaBackground = new Sprite();
+        this.arenaBackground = new Sprite(Texture.from('assets/art/Background.png'))
+        this.arenaBackground.anchor.set(0.5);
+        this.container.addChild(this.arenaBackground);
     }
 
     private createArenaCircle(): void {
@@ -111,6 +122,14 @@ export class GameMap {
         this.arenaWallColumnsBottom.anchor.set(0.5, 0);
         this.container.addChild(this.arenaWallColumnsBottom);
     }
+
+    private createArenaStands(): void {
+        this.arenaStands = new Sprite();
+        this.arenaStands = new Sprite(Texture.from('assets/art/Stands.png'))
+        this.arenaStands.position.y -= 90;
+        this.arenaStands.anchor.set(0.5);
+        this.container.addChild(this.arenaStands);
+    } 
 
 
     /**
