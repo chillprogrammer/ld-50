@@ -1,4 +1,4 @@
-import { Application, Container, IApplicationOptions, InteractionEvent, Sprite, Texture } from "pixi.js";
+import { AbstractRenderer, Application, Container, IApplicationOptions, InteractionEvent, Renderer, Sprite, Texture } from "pixi.js";
 import * as PIXI from "pixi.js"
 import { Observable, Subject } from "rxjs";
 
@@ -46,6 +46,10 @@ export class GraphicsManagerService {
         return this.app.renderer.view;
     }
 
+    public getRenderer(): Renderer | AbstractRenderer {
+        return this.app.renderer;
+    }
+
     private createBackgroundSprite(): void {
         this.background = new Sprite(Texture.WHITE);
         this.background.position.set(0, 0);
@@ -69,7 +73,7 @@ export class GraphicsManagerService {
         }
         this.app = new Application(startParams);
 
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         PIXI.settings.WRAP_MODE = PIXI.WRAP_MODES.CLAMP;
         PIXI.settings.ROUND_PIXELS = true;
 

@@ -1,4 +1,6 @@
-import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Texture } from "pixi.js";
+import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, Renderer, SCALE_MODES, Texture } from "pixi.js";
+import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
+import { ServiceInjector } from "../../services/service-injector.module";
 
 /**
  * The base Entity class.
@@ -18,6 +20,9 @@ export class Entity {
     // Pixi.js
     protected sprite: AnimatedSprite = null;
     protected container: Container = null;
+
+    // Service
+    protected graphicsManagerService: GraphicsManagerService = ServiceInjector.getServiceByClass(GraphicsManagerService);
 
     // Updates
     protected delta: number = 0;
@@ -107,7 +112,6 @@ export class Entity {
      * @returns The container the Button is inside.
      */
     getContainer() { return this.container; }
-
 }
 
 export interface TilesetInterface {

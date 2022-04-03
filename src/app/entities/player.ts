@@ -5,19 +5,19 @@ import { Entity, TilesetInterface } from "./base-entity";
 
 export class Player extends Entity {
 
-    // Idle Sprite
+    // Sprites
     private idleSprite: AnimatedSprite = null;
-
-    // Arm Sprite
     private armSprite: Sprite = null;
+    private swordSprite: Sprite = null;
 
     // Services
     private keyManagerService: KeyManagerService = ServiceInjector.getServiceByClass(KeyManagerService);
 
     // Variables
     private maxRadius: number = 0;
-    public static PosX: number = 0; 
-    public static PosY: number = 0; 
+    public static PosX: number = 0;
+    public static PosY: number = 0;
+
 
     constructor() {
         super();
@@ -35,6 +35,7 @@ export class Player extends Entity {
         this.isAlive = true;
 
         this.loadArmSprite();
+        this.loadSwordSprite();
         this.loadIdleSprite();
         this.loadBaseSprite();
     }
@@ -66,37 +67,59 @@ export class Player extends Entity {
     private loadArmSprite(): void {
         this.armSprite = new Sprite(Texture.from("assets/art/arm.png"))
         this.armSprite.position.set(0, 0)
-        this.armSprite.anchor.set(0.5, 0.5);
+        this.armSprite.anchor.set(0.2, 1);
         this.armSprite.scale.set(1, 1);
         this.container.addChild(this.armSprite);
+    }
+
+    public loadSwordSprite(): void {
+
+        this.swordSprite = new Sprite(Texture.from("assets/art/Sword.png"))
+        this.swordSprite.position.set(10, 0)
+        this.swordSprite.anchor.set(0.5, 1);
+        this.swordSprite.scale.set(1.5, 1.5);
+        this.armSprite.addChild(this.swordSprite);
     }
 
     public setMaxWalkingRadius(radius: number): void {
         this.maxRadius = radius;
     }
 
+    private calculateArmAndSwordAngle(): void {
+        const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
+        const playerPos: { x: number, y: number } = this.sprite.getBounds();
+
+        const angle = Math.atan2((mousePos.y - playerPos.y), (mousePos.x - playerPos.x))
+        this.armSprite.rotation = angle + Math.PI/2;
+
+        if (mousePos.x < playerPos.x) {
+            this.sprite.scale.x = -1;
+        } else {
+            this.sprite.scale.x = 1;
+            this.armSprite.scale.y = 1;
+        }
+    }
+
     public update(delta: number): void {
         super.update(delta);
 
         if (this.isAlive) {
+            this.calculateArmAndSwordAngle();
+
             if (this.keyManagerService.isKeyPressed('w')) {
                 this.moveUp();
             } else if (this.keyManagerService.isKeyPressed('s')) {
                 this.moveDown();
-            } else {
-                //Camera.velocity.y = 0;
             }
             if (this.keyManagerService.isKeyPressed('a')) {
                 this.moveLeft();
             }
             else if (this.keyManagerService.isKeyPressed('d')) {
                 this.moveRight();
-            } else {
-                //Camera.velocity.x = 0;
             }
         }
 
-        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height/2);
+        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height / 2);
         Player.PosX = this.sprite.position.x;
         Player.PosY = this.sprite.position.y;
     }
@@ -118,9 +141,7 @@ export class Player extends Entity {
     }
 
     private isPositionOutsideOfRadius(posX: number, posY: number): boolean {
-        console.log(Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)));
-        console.log(`${posX} ${posY}`);
-        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius-15) {
+        if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2)) >= this.maxRadius - 15) {
             return true;
         }
         return false;
@@ -151,8 +172,6 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = -1;  
-        this.armSprite.scale.x = -1;
     }
 
     private moveRight(): void {
@@ -162,8 +181,6 @@ export class Player extends Entity {
         } else {
             this.placePlayerInsideArenaBoundary();
         }
-        this.sprite.scale.x = 1;
-        this.armSprite.scale.x = 1;
     }
 
 

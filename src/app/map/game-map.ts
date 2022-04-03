@@ -51,14 +51,14 @@ export class GameMap {
         this.container.scale.set(0.88);
         this.container.position.y += 35
         this.godrayFilter = new GodrayFilter();
-        this.godrayFilter.time = 0;
+        this.godrayFilter.time = 14;
         this.godrayFilter.lacunarity = 2.2
         this.godrayFilter.gain = 0.5;
         this.container.filters = [this.godrayFilter];
         this.createArenaCircle();
         this.createWallColumnsTop();
         this.createPlayer();
-        this.createEnemy();
+        //this.createEnemy();
         this.createWallColumnsBottom();
     }
 
@@ -127,8 +127,8 @@ export class GameMap {
         }
     }
 
-    private updateEnemy(delta: number) : void {
-        if(this.enemy) {
+    private updateEnemy(delta: number): void {
+        if (this.enemy) {
             this.enemy.update(delta);
         }
     }

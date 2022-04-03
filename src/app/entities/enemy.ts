@@ -29,8 +29,8 @@ export class Enemy extends Entity {
         this.speed = .5;
         this.isAlive = true;
 
-        
-        this.velocity = new PIXI.Point(this.speed, this.speed); 
+
+        this.velocity = new PIXI.Point(this.speed, this.speed);
 
         this.loadIdleSprite();
         this.loadBaseSprite();
@@ -64,7 +64,7 @@ export class Enemy extends Entity {
         this.maxRadius = radius;
     }
 
-    update(delta: number) : void{
+    update(delta: number): void {
 
         super.update(delta);
 
@@ -72,36 +72,36 @@ export class Enemy extends Entity {
             if (this.sprite.position.x < Player.PosX) {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
-                this.sprite.position.set(xPos + this.velocity.x * delta,yPos);
+                this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
                 this.sprite.scale.set(1, 1);
-           } else {
+            } else {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
-                this.sprite.position.set(xPos - this.velocity.x * delta,yPos);
+                this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
                 this.sprite.scale.set(-1, 1);
-           }
-           
-           if (this.sprite.position.y < Player.PosY) {
-            let xPos = this.sprite.position.x;
-            let yPos = this.sprite.position.y;
-            this.sprite.position.set(xPos,yPos + this.velocity.y * delta);
-            
-           } else {
-            let xPos = this.sprite.position.x;
-            let yPos = this.sprite.position.y;
-            this.sprite.position.set(xPos,yPos - this.velocity.y * delta);
-            
-           }
-           
-           
+            }
 
-           
-       } 
-                
-            
-            
-        
-        
+            if (this.sprite.position.y < Player.PosY) {
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos, yPos + this.velocity.y * delta);
+
+            } else {
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
+
+            }
+
+
+
+
+        }
+
+
+
+
+
 
     }
 }
