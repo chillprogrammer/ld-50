@@ -1,3 +1,4 @@
+import { Howl } from "howler";
 import * as PIXI from "pixi.js"
 import { AnimatedSprite, Texture } from "pixi.js";
 import { Entity, TilesetInterface } from "./base-entity";
@@ -40,6 +41,16 @@ export class Enemy extends Entity {
         
         this.loadWalkSprite();
         this.loadBaseSprite();
+        this.loadDeathSounds();
+    }
+
+    private loadDeathSounds(): void {
+        this.deathSounds = [
+            'assets/sounds/whiny_nooo.wav',
+            'assets/sounds/weep.wav',
+            'assets/sounds/uhhhh.wav',
+            'assets/sounds/gah.wav'
+        ]
     }
 
     private loadBaseSprite(): void {
@@ -50,7 +61,7 @@ export class Enemy extends Entity {
         this.sprite.animationSpeed = this.speed/3;
         this.sprite.scale.set(1, 1);
         this.sprite.play();
-        this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
+        //this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
         this.container.addChild(this.sprite);
     }
 
