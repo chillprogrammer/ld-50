@@ -2,6 +2,7 @@ import { GodrayFilter } from "@pixi/filter-godray";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
+import { Bellhead } from "../entities/Bellhead";
 import { Enemy } from "../entities/enemy";
 import { Player } from "../entities/player";
 
@@ -28,6 +29,7 @@ export class GameMap {
     // Entities
     private player: Player = null;
     private enemy: Enemy = null;
+    private bellhead: Bellhead = null;
 
     private godrayFilter: GodrayFilter = null;
 
@@ -58,7 +60,7 @@ export class GameMap {
         this.createArenaCircle();
         this.createWallColumnsTop();
         this.createPlayer();
-        //this.createEnemy();
+        this.createBellhead();
         this.createWallColumnsBottom();
     }
 
@@ -70,8 +72,12 @@ export class GameMap {
 
     private createEnemy(): void {
         this.enemy = new Enemy();
-        this.enemy.setMaxWalkingRadius(this.arenaObject.radius);
         this.container.addChild(this.enemy.getContainer());
+    }
+
+    private createBellhead(): void {
+        this.bellhead = new Bellhead();
+        this.container.addChild(this.bellhead.getContainer());
     }
 
     private createArenaCircle(): void {
@@ -133,6 +139,12 @@ export class GameMap {
         }
     }
 
+    private updateBellhead(delta: number): void {
+        if (this.bellhead) {
+            this.bellhead.update(delta);
+        }
+    }
+
     /**
      * Runs from the Main Game Loop
      * @param delta delta time
@@ -141,7 +153,7 @@ export class GameMap {
         // TODO - add update logic
         this.updateGodrays(delta);
         this.updatePlayer(delta);
-        this.updateEnemy(delta);
+        this.updateBellhead(delta);
     }
 }
 
