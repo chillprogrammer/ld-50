@@ -60,7 +60,7 @@ export class Bellhead extends Entity {
     }
 
     public takeDamage(): void {
-        if (this.damageCooldown <= 0) {
+        if (this.damageCooldown <= 0 && this.isAlive) {
             super.takeDamage();
 
             const xDirection: number = this.sprite.position.x - Player.PosX;
