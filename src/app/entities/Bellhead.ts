@@ -109,29 +109,32 @@ export class Bellhead extends Entity {
     }
 
     public attack(): void {
-        if (this.attackCooldown <= 0) {
-            this.attackCooldown = 250;
-            super.attack();
-            this.sprite.textures = this.attackTextures;
-            this.sprite.onLoop = () => {
-                if (this.sprite.textures === this.attackTextures) {
-                    this.attacking = false;
-                    this.sprite.textures = this.walkTextures;
-                    this.sprite.play();
-                }
-            }
+        setTimeout(() => {
+            if (this.attackCooldown <= 0) {
+                super.attack();
+                this.attackCooldown = 250;
 
-            this.sprite.onFrameChange = (frame: number) => {
-                if (this.sprite.textures === this.attackTextures) {
-                    if (frame === 7) {
-                        this.playShockwave();
+
+                this.sprite.textures = this.attackTextures;
+                this.sprite.onLoop = () => {
+                    if (this.sprite.textures === this.attackTextures) {
+                        this.attacking = false;
+                        this.sprite.textures = this.walkTextures;
+                        this.sprite.play();
                     }
                 }
+
+                this.sprite.onFrameChange = (frame: number) => {
+                    if (this.sprite.textures === this.attackTextures) {
+                        if (frame === 7) {
+                            this.playShockwave();
+                        }
+                    }
+                }
+
+                this.sprite.play();
             }
-
-            this.sprite.play();
-
-        }
+        }, 500);
     }
 
     private playShockwave(): void {
