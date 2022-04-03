@@ -8,10 +8,7 @@ export class Bellhead extends Entity {
     private idleSprite: AnimatedSprite = null;
 
     public velocity: PIXI.Point;
-
-
-    // Variables
-    private maxRadius: number = 0;
+    
 
     constructor() {
         super();

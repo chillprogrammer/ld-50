@@ -3,11 +3,14 @@ import { Entity } from "./base-entity";
 import { Bellhead } from "./Bellhead";
 import { Enemy } from "./enemy";
 import { Player } from "./player";
+import { interval } from 'rxjs';
 
 /**
  * Manager for entities
  */
 export class EntityManager {
+
+    private spawnBellheadTimer = interval(30000);
 
     // Private list of Entities.
     private entityList: Entity[] = [];
@@ -16,12 +19,17 @@ export class EntityManager {
 
     private container: Container = null;
 
+    constructor() {
+        this.spawnBellheadTimer.subscribe(x => {
+            this.spawnEntity(0);
+        }
+        );
+    }
+
     public setContainer(container: Container): void {
         this.container = container;
         this.spawnEntity(0);
         this.spawnEntity(1);
-
-        
     }
 
     /**
@@ -31,7 +39,7 @@ export class EntityManager {
     public update(delta: number) {
         this.x++;
 
-        if(this.x % 100 === 0) {
+        if (this.x % 100 === 0) {
             this.spawnEntity(1);
         }
 
@@ -57,7 +65,7 @@ export class EntityManager {
         }
     }
 
-    
+
     private isCollidingWithSword(entity: Entity): boolean {
         const ab = Player.SwordBounds;
         const bb = entity.sprite.getBounds();
@@ -65,7 +73,7 @@ export class EntityManager {
     }
 
     private checkCollisionWithSword(entity: Entity): void {
-        if(this.isCollidingWithSword(entity)) {
+        if (this.isCollidingWithSword(entity)) {
             entity.takeDamage();
         }
     }
@@ -81,7 +89,7 @@ export class EntityManager {
             default: // Bellhead
                 entity = new Bellhead();
                 break;
-            
+
         }
 
         if (entity) {
