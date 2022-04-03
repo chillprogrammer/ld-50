@@ -29,6 +29,10 @@ export class EntityManager {
 
         this.x++;
 
+        if(this.x % 400 === 0) {
+            this.spawnEntity(1);
+        }
+
         // For each entity, we need to either: update it, nullify it, or remove it.
         for (let i = this.entityList.length; i >= 0; i--) {
             const entity = this.entityList[i];

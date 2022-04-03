@@ -1,12 +1,12 @@
 import * as PIXI from "pixi.js"
-import { AnimatedSprite } from "pixi.js";
-import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
+import { AnimatedSprite, Texture } from "pixi.js";
 import { Entity, TilesetInterface } from "./base-entity";
 import { Player } from "./player";
 
 export class Enemy extends Entity {
 
-    private idleSprite: AnimatedSprite = null;
+    private idleTextures: Texture[] = [Texture.EMPTY];
+    private walkTextures: Texture[] = [Texture.EMPTY];
 
     public velocity: PIXI.Point;
 
@@ -27,18 +27,30 @@ export class Enemy extends Entity {
         this.maxHealth = 100;
         this.shield = 50;
         this.speed = .5;
+
+        this.speed = Math.random() + 0.1;
+        if(this.speed >= 1) {
+            this.speed = 1;
+        }
         this.isAlive = true;
 
 
         this.velocity = new PIXI.Point(this.speed, this.speed);
 
         this.loadIdleSprite();
+        this.loadWalkSprite();
         this.loadBaseSprite();
     }
 
     private loadBaseSprite(): void {
-        this.sprite = this.idleSprite;
-        this.sprite.tint = 0xff8888;
+        this.sprite = new AnimatedSprite([Texture.EMPTY], true);
+        this.sprite.position.set(0, -260)
+        this.sprite.anchor.set(0.5, 1);
+        this.sprite.loop = true;
+        this.sprite.animationSpeed = this.speed/3;
+        this.sprite.scale.set(1, 1);
+        this.sprite.play();
+        this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
         this.container.addChild(this.sprite);
     }
 
@@ -50,15 +62,18 @@ export class Enemy extends Entity {
             columnCount: 8,
             spritesheetName: "gladiator-idle.png"
         }
-        const textureList = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
-        this.idleSprite = new AnimatedSprite(textureList, true);
-        this.sprite = this.idleSprite;
-        this.sprite.position.set(0, 0);
-        this.sprite.loop = true;
-        this.sprite.animationSpeed = 0.2;
-        this.sprite.anchor.set(0.5, 1);
-        this.sprite.scale.set(1, 1);
-        this.sprite.play();
+        this.idleTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
+    }
+
+    private loadWalkSprite() {
+        const tilesetInterface: TilesetInterface = {
+            tileCount: 8,
+            tileWidth: 32,
+            tileHeight: 47,
+            columnCount: 8,
+            spritesheetName: "Glad_Walk.png"
+        }
+        this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
     }
 
     public setMaxWalkingRadius(radius: number): void {
@@ -70,32 +85,59 @@ export class Enemy extends Entity {
         super.update(delta);
 
         if (this.isAlive) {
+            let moving = false;
+
             if (this.sprite.position.x < Player.PosX) {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
-                this.sprite.scale.set(1, 1);
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    this.sprite.scale.set(1, 1);
+                    moving = true;
+                }
             } else {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
-                this.sprite.scale.set(-1, 1);
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    this.sprite.scale.set(-1, 1);
+                    moving = true;
+                }
             }
 
             if (this.sprite.position.y < Player.PosY) {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos, yPos + this.velocity.y * delta);
-
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    moving = true;
+                } else {
+                    if (!moving) {
+                        moving = false;
+                    }
+                }
             } else {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
-
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    moving = true;
+                } else {
+                    if (!moving) {
+                        moving = false;
+                    }
+                }
             }
 
-
-
+            if (!moving && this.sprite.name !== 'idling') {
+                this.sprite.textures = this.idleTextures;
+                this.sprite.play();
+                this.sprite.name = 'idling';
+            } else if (moving && this.sprite.name !== 'walking') {
+                this.sprite.textures = this.walkTextures;
+                this.sprite.play();
+                this.sprite.name = 'walking';
+            }
 
         }
 

@@ -71,7 +71,7 @@ export class Bellhead extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
-                if(Math.abs(xPos - Player.PosX) > 0.3) {
+                if(Math.abs(xPos - Player.PosX) > 0.5) {
                     this.sprite.scale.set(-1, 1);
                 }
             } else {
@@ -79,7 +79,7 @@ export class Bellhead extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
-                if(Math.abs(xPos - Player.PosX) > 0.3) {
+                if(Math.abs(xPos - Player.PosX) > 0.5) {
                     this.sprite.scale.set(1, 1);
                 }
             }
