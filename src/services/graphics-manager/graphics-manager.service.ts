@@ -73,7 +73,7 @@ export class GraphicsManagerService {
         }
         this.app = new Application(startParams);
 
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         PIXI.settings.WRAP_MODE = PIXI.WRAP_MODES.CLAMP;
         PIXI.settings.ROUND_PIXELS = true;
 

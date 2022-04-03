@@ -1,15 +1,14 @@
-import { AnimatedSprite, Point, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Sprite, Texture } from "pixi.js";
 import { KeyManagerService } from "../../services/key-manager/key-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Entity, TilesetInterface } from "./base-entity";
 
 export class Player extends Entity {
 
-    // Idle Sprite
+    // Sprites
     private idleSprite: AnimatedSprite = null;
-
-    // Arm Sprite
     private armSprite: Sprite = null;
+    private swordSprite: Sprite = null;
 
     // Services
     private keyManagerService: KeyManagerService = ServiceInjector.getServiceByClass(KeyManagerService);
@@ -19,7 +18,6 @@ export class Player extends Entity {
     public static PosX: number = 0;
     public static PosY: number = 0;
 
-    private mousePosition: any = null;
 
     constructor() {
         super();
@@ -37,6 +35,7 @@ export class Player extends Entity {
         this.isAlive = true;
 
         this.loadArmSprite();
+        this.loadSwordSprite();
         this.loadIdleSprite();
         this.loadBaseSprite();
     }
@@ -73,27 +72,31 @@ export class Player extends Entity {
         this.container.addChild(this.armSprite);
     }
 
+    public loadSwordSprite(): void {
+
+        this.swordSprite = new Sprite(Texture.from("assets/art/Sword.png"))
+        this.swordSprite.position.set(10, 0)
+        this.swordSprite.anchor.set(0.5, 1);
+        this.swordSprite.scale.set(1.5, 1.5);
+        this.armSprite.addChild(this.swordSprite);
+    }
+
     public setMaxWalkingRadius(radius: number): void {
         this.maxRadius = radius;
     }
 
-    private calculateArmAndSwordPosition(): void {
+    private calculateArmAndSwordAngle(): void {
         const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
         const playerPos: { x: number, y: number } = this.sprite.getBounds();
 
-        console.log(`Player: ${playerPos.x}, ${playerPos.y}`);
-        console.log(`Mouse: ${mousePos.x}, ${mousePos.y}`);
-
         const angle = Math.atan2((mousePos.y - playerPos.y), (mousePos.x - playerPos.x))
-        this.armSprite.rotation = angle;
-        console.log(angle)
+        this.armSprite.rotation = angle + Math.PI/2;
 
-        if(mousePos.x < playerPos.x) {
+        if (mousePos.x < playerPos.x) {
             this.sprite.scale.x = -1;
-            this.armSprite.scale.y = -1;
         } else {
             this.sprite.scale.x = 1;
-            this.armSprite.scale.y = 1;   
+            this.armSprite.scale.y = 1;
         }
     }
 
@@ -101,7 +104,7 @@ export class Player extends Entity {
         super.update(delta);
 
         if (this.isAlive) {
-            this.calculateArmAndSwordPosition();
+            this.calculateArmAndSwordAngle();
 
             if (this.keyManagerService.isKeyPressed('w')) {
                 this.moveUp();
