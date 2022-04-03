@@ -50,7 +50,7 @@ export class Enemy extends Entity {
         this.sprite.animationSpeed = this.speed/3;
         this.sprite.scale.set(1, 1);
         this.sprite.play();
-        this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
+        //this.sprite.tint = parseInt(`0x${Math.floor(Math.random() * 16777215).toString(16)}`);
         this.container.addChild(this.sprite);
     }
 

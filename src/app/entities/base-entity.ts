@@ -76,7 +76,7 @@ export class Entity {
 
     public takeDamage(): void {
         if (this.damageCooldown <= 0) {
-            this.damageCooldown = 5;
+            this.damageCooldown = 3;
             this.health -= 10;
         }
     }
@@ -120,16 +120,18 @@ export class Entity {
     public update(delta: number) {
         // TODO - enter update logic
         this.delta = delta;
-        this.container.zIndex = this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT / 2;
+        if (this.isAlive) {
+            this.container.zIndex = this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT / 2;
+        }
 
         if (this.health <= 0 && this.isAlive) {
             this.isAlive = false;
             this.sprite.textures = this.bloodTextures;
-            this.sprite.gotoAndStop(Math.floor((Math.random()+1)*4));
-            //this.sprite.play();
+            this.sprite.gotoAndStop(Math.floor((Math.random() + 1) * 4));
+            this.container.zIndex = 0;
         }
 
-        if(this.damageCooldown > 0) {
+        if (this.damageCooldown > 0) {
             this.damageCooldown--;
         }
     }
