@@ -28,9 +28,9 @@ export class Enemy extends Entity {
         this.shield = 50;
         this.speed = .5;
 
-        this.speed = Math.random() + 0.1;
-        if(this.speed >= 1) {
-            this.speed = 1;
+        this.speed = Math.random()*1.2 + 0.2;
+        if(this.speed >= 1.4) {
+            this.speed = 1.4;
         }
         this.isAlive = true;
 
@@ -109,23 +109,15 @@ export class Enemy extends Entity {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos, yPos + this.velocity.y * delta);
-                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                if (Math.abs(yPos - Player.PosY) > 2.0) {
                     moving = true;
-                } else {
-                    if (!moving) {
-                        moving = false;
-                    }
                 }
             } else {
                 let xPos = this.sprite.position.x;
                 let yPos = this.sprite.position.y;
                 this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
-                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                if (Math.abs(yPos - Player.PosY) > 2.0) {
                     moving = true;
-                } else {
-                    if (!moving) {
-                        moving = false;
-                    }
                 }
             }
 

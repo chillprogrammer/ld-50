@@ -2,6 +2,7 @@ import { Container } from "pixi.js";
 import { Entity } from "./base-entity";
 import { Bellhead } from "./Bellhead";
 import { Enemy } from "./enemy";
+import { Player } from "./player";
 
 /**
  * Manager for entities
@@ -26,7 +27,6 @@ export class EntityManager {
      * @param delta 
      */
     public update(delta: number) {
-
         this.x++;
 
         if(this.x % 400 === 0) {
@@ -40,6 +40,7 @@ export class EntityManager {
                 // If entity is not destroyed, then we update it.
                 if (!entity.isDestroyed) {
                     entity.update(delta);
+                    this.checkCollisionWithSword(entity);
                 }
                 // If entity is destroyed, then we set it to null so it will be removed next frame.
                 else {
@@ -51,6 +52,19 @@ export class EntityManager {
             else {
                 this.entityList.splice(i);
             }
+        }
+    }
+
+    
+    private isCollidingWithSword(entity: Entity): boolean {
+        const ab = Player.SwordBounds;
+        const bb = entity.sprite.getBounds();
+        return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
+    }
+
+    private checkCollisionWithSword(entity: Entity): void {
+        if(this.isCollidingWithSword(entity)) {
+            entity.takeDamage();
         }
     }
 

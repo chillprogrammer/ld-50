@@ -1,4 +1,4 @@
-import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, Renderer, SCALE_MODES, Texture } from "pixi.js";
+import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 
@@ -14,11 +14,20 @@ export class Entity {
     protected maxHealth: number;
     protected shield: number;
     protected speed: number;
-    protected isAlive: boolean;
+    public isAlive: boolean;
     protected movementSpeed: number;
+    protected damageCooldown: number = 0;
+
+    private bloodTextures: Texture[] = [
+        Texture.from('assets/art/blood.png'),
+        Texture.from('assets/art/blood2.png'),
+        Texture.from('assets/art/blood3.png'),
+        Texture.from('assets/art/blood4.png'),
+        Texture.from('assets/art/blood5.png')
+    ];
 
     // Pixi.js
-    protected sprite: AnimatedSprite = null;
+    public sprite: AnimatedSprite = null;
     protected container: Container = null;
 
     // Service
@@ -65,6 +74,13 @@ export class Entity {
         return textureList;
     }
 
+    public takeDamage(): void {
+        if (this.damageCooldown <= 0) {
+            this.damageCooldown = 5;
+            this.health -= 10;
+        }
+    }
+
     /**
      * Destroys the entity, it's sprite, and all the rest of it.
      */
@@ -104,7 +120,18 @@ export class Entity {
     public update(delta: number) {
         // TODO - enter update logic
         this.delta = delta;
-        this.container.zIndex=this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT/2;
+        this.container.zIndex = this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT / 2;
+
+        if (this.health <= 0 && this.isAlive) {
+            this.isAlive = false;
+            this.sprite.textures = this.bloodTextures;
+            this.sprite.gotoAndStop(Math.floor((Math.random()+1)*4));
+            //this.sprite.play();
+        }
+
+        if(this.damageCooldown > 0) {
+            this.damageCooldown--;
+        }
     }
 
     /**

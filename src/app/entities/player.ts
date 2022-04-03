@@ -1,4 +1,4 @@
-import { AnimatedSprite, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Rectangle, Sprite, Texture } from "pixi.js";
 import { KeyManagerService } from "../../services/key-manager/key-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Entity, TilesetInterface } from "./base-entity";
@@ -18,6 +18,7 @@ export class Player extends Entity {
     private maxRadius: number = 0;
     public static PosX: number = 0;
     public static PosY: number = 0;
+    public static SwordBounds: Rectangle = new Rectangle();
 
 
     constructor() {
@@ -72,7 +73,7 @@ export class Player extends Entity {
             columnCount: 8,
             spritesheetName: "Glad_Walk.png"
         }
-      this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
+        this.walkTextures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
     }
 
     private loadArmSprite(): void {
@@ -109,6 +110,8 @@ export class Player extends Entity {
             this.sprite.scale.x = 1;
             this.armSprite.scale.y = 1;
         }
+
+        Player.SwordBounds = this.swordSprite.getBounds();
     }
 
     public update(delta: number): void {

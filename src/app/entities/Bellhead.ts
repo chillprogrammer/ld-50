@@ -24,8 +24,8 @@ export class Bellhead extends Entity {
      * Initialize enemy class
      */
     private init(): void {
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = 1000;
+        this.maxHealth = 1000;
         this.shield = 50;
         this.speed = 0.2;
         this.isAlive = true;
