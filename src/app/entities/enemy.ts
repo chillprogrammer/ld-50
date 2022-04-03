@@ -21,8 +21,8 @@ export class Enemy extends Entity {
      * Initialize enemy class
      */
     private init(): void {
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = 10;
+        this.maxHealth = 10;
         this.shield = 50;
         this.speed = .5;
 
