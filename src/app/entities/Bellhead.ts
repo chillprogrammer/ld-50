@@ -45,8 +45,8 @@ export class Bellhead extends Entity {
     private loadWalkSprite(): void {
         const tilesetInterface: TilesetInterface = {
             tileCount: 12,
-            tileWidth: 96,
-            tileHeight: 95,
+            tileWidth: 128,
+            tileHeight: 112,
             columnCount: 12,
             spritesheetName: "Bellhead_Walk.png"
         }
@@ -57,7 +57,7 @@ export class Bellhead extends Entity {
         this.sprite.position.set(0, -300);
         this.sprite.loop = true;
         this.sprite.animationSpeed = 0.2;
-        this.sprite.anchor.set(0.5, 1);
+        this.sprite.anchor.set(0.58, 1);
         this.sprite.scale.set(1, 1);
         this.sprite.play();
     }
