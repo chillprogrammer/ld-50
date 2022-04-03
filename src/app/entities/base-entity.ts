@@ -21,6 +21,10 @@ export class Entity {
     public damageCooldown: number = 0;
     protected static maxRadius: number = 0;
 
+    protected attacking: boolean = false;
+
+    protected agroDistance: number = 80;
+
     protected deathSounds: string[] = [];
     protected damageSounds: string[] = [];
 
@@ -86,6 +90,10 @@ export class Entity {
         }
 
         return textureList;
+    }
+
+    public attack(): void {
+        this.attacking = true;
     }
 
     public takeDamage(): void {
