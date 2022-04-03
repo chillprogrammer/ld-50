@@ -1,7 +1,5 @@
 import * as PIXI from "pixi.js"
 import { AnimatedSprite } from "pixi.js";
-import { TestScheduler } from "rxjs/testing";
-import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { Entity, TilesetInterface } from "./base-entity";
 import { Player } from "./player";
 
@@ -62,14 +60,16 @@ export class Bellhead extends Entity {
     }
 
     public takeDamage(): void {
-        super.takeDamage();
+        if (this.damageCooldown <= 0) {
+            super.takeDamage();
 
-        const xDirection: number = this.sprite.position.x - Player.PosX;
-        const yDirection: number = this.sprite.position.y - Player.PosY;
-        this.sprite.position.set(
-            xDirection >= 0 ? this.sprite.position.x + 25 : this.sprite.position.x - 25,
-            yDirection >= 0 ? this.sprite.position.y + 25 : this.sprite.position.y - 25
-        )
+            const xDirection: number = this.sprite.position.x - Player.PosX;
+            const yDirection: number = this.sprite.position.y - Player.PosY;
+            this.sprite.position.set(
+                xDirection >= 0 ? this.sprite.position.x + 25 : this.sprite.position.x - 25,
+                yDirection >= 0 ? this.sprite.position.y + 25 : this.sprite.position.y - 25
+            );
+        }
     }
 
 
