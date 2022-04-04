@@ -37,6 +37,8 @@ export class Entity {
         Texture.from('assets/art/blood5.png')
     ];
 
+    public type: string = 'base';
+
     // Pixi.js
     public sprite: AnimatedSprite = null;
     protected container: Container = null;

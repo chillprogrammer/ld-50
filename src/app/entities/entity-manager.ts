@@ -10,7 +10,7 @@ import { interval } from 'rxjs';
  */
 export class EntityManager {
 
-    private spawnBellheadTimer = interval(30000);
+    private spawnBellheadTimer = interval(20000);
 
     // Private list of Entities.
     private entityList: Entity[] = [];
@@ -39,7 +39,7 @@ export class EntityManager {
     public update(delta: number) {
         this.x += 1 * delta;
 
-        if (Math.floor(this.x % 200) === 0) {
+        if (Math.floor(this.x % 100) === 0) {
             this.spawnEntity(1);
         }
 
@@ -51,6 +51,9 @@ export class EntityManager {
                 if (!entity.isDestroyed) {
                     entity.update(delta);
                     this.checkCollisionWithSword(entity);
+                    if (entity.type === 'enemy' && entity.isAlive) {
+                        this.checkCollisionWithPlayer(entity);
+                    }
                 }
                 // If entity is destroyed, then we set it to null so it will be removed next frame.
                 else {
@@ -72,10 +75,24 @@ export class EntityManager {
         return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
     }
 
+    private isCollidingWithPlayer(entity: Entity): boolean {
+        const ab = Player.playerSprite.getBounds();
+        const bb = entity.sprite.getBounds();
+        return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
+    }
+
     private checkCollisionWithSword(entity: Entity): void {
         if (this.isCollidingWithSword(entity)) {
             if (Player.playerIsAlive) {
                 entity.takeDamage();
+            }
+        }
+    }
+
+    private checkCollisionWithPlayer(entity: Entity): void {
+        if (this.isCollidingWithPlayer(entity)) {
+            if (Player.playerIsAlive) {
+                Player.playerEntity.takeDamage(10);
             }
         }
     }
@@ -89,11 +106,13 @@ export class EntityManager {
         switch (type) {
             case 1:
                 entity = new Enemy();
+                entity.type = 'enemy';
                 break;
             case 2:
                 break;
             default: // Bellhead
                 entity = new Bellhead();
+                entity.type = 'bellhead';
                 break;
 
         }
