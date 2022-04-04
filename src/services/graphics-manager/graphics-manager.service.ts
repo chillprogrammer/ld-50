@@ -8,7 +8,7 @@ export class GraphicsManagerService {
     private app: Application;
     public container: Container = null;
     private background: Sprite = null;
-    private backgroundColor: number = 0x386890;
+    private backgroundColor: number = 0x000000;
     private clickedStageEvent: Subject<InteractionEvent> = new Subject<InteractionEvent>();
 
     constructor() {

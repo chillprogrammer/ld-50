@@ -3,6 +3,7 @@ import { GraphicsManagerService } from "../services/graphics-manager/graphics-ma
 import { ServiceInjector } from "../services/service-injector.module";
 import { KeyManagerService } from "../services/key-manager/key-manager.service";
 import { ErrorScreen } from "./menus/error-screen";
+import { LoadingScreen } from "./menus/loading-screen";
 
 export class App {
 
@@ -21,9 +22,11 @@ export class App {
         // We wait for the config file to be recieved before the game loads.
         //await configManager.getConfigFile();
 
+        const loadingScreen = new LoadingScreen();
+        graphicsManager.addChild(loadingScreen.getContainer());
         // Wait for all assets to load before the game begins.
-        this.loadAssets().then(() => {
-
+        loadingScreen.loadAssets().then(() => {
+            graphicsManager.removeChild(loadingScreen.getContainer());
             // Create a new Game.
             const game = new Game();
             game.init();
