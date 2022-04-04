@@ -119,16 +119,16 @@ export class Player extends Entity {
             this.sprite.scale.x = 1;
             this.armSprite.scale.y = 1;
         }
-
-        Player.SwordBounds = this.swordSprite.getBounds();
     }
 
     public update(delta: number): void {
-        super.update(delta);
-
-        Player.playerIsAlive = this.isAlive;
 
         if (this.isAlive) {
+            super.update(delta);
+
+            Player.playerIsAlive = this.isAlive;
+            Player.SwordBounds = this.swordSprite.getBounds();
+
             this.calculateArmAndSwordAngle();
 
             let playerMoving = false;
@@ -157,11 +157,19 @@ export class Player extends Entity {
                 this.sprite.play();
                 this.sprite.name = 'walking';
             }
+            this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height / 2);
+            Player.PosX = this.sprite.position.x;
+            Player.PosY = this.sprite.position.y;
         }
 
-        this.armSprite.position.set(this.sprite.position.x, this.sprite.position.y - this.sprite.height / 2);
-        Player.PosX = this.sprite.position.x;
-        Player.PosY = this.sprite.position.y;
+    }
+
+    public reset(): void {
+        this.setHealth(100);
+        this.sprite.textures = this.idleTextures;
+        this.sprite.play();
+        this.sprite.name = 'idling';
+        this.isAlive = true;
     }
 
     private moveUp(): void {
