@@ -20,7 +20,7 @@ export class Entity {
     protected movementSpeed: number;
     public damageCooldown: number = 0;
     public attackCooldown: number = 0;
-    protected static maxRadius: number = 0;
+    public static maxRadius: number = 0;
 
     protected attacking: boolean = false;
 
@@ -122,6 +122,7 @@ export class Entity {
      */
     public destroy(): void {
         this.isDestroyed = true;
+        this.container.destroy(true);
     }
 
     /**
@@ -129,6 +130,8 @@ export class Entity {
      * @returns Health
      */
     public getHealth(): number { return this.health; }
+
+    public setHealth(val: number): void { this.health = val; }
 
     /**
      * 
@@ -179,31 +182,33 @@ export class Entity {
      * @param delta delta time
      */
     public update(delta: number) {
-        if (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
-            this.placeEntityInsideArenaBoundary();
-        }
-        // TODO - enter update logic
-        this.delta = delta;
         if (this.isAlive) {
-            this.container.zIndex = this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT / 2;
-        }
+            if (this.isPositionOutsideOfRadius(this.sprite.position.x, this.sprite.position.y)) {
+                this.placeEntityInsideArenaBoundary();
+            }
 
-        if (this.health <= 0 && this.isAlive) {
-            this.isAlive = false;
-            this.sprite.textures = this.bloodTextures;
-            this.sprite.gotoAndStop(Math.floor((Math.random() + 1) * 4));
-            this.container.zIndex = 0;
-            this.death();
-        }
+            this.delta = delta;
+            if (this.isAlive) {
+                this.container.zIndex = this.sprite.position.y + GraphicsManagerService.INITIAL_HEIGHT / 2;
+            }
 
-        if (this.damageCooldown > 0) {
-            this.damageCooldown -= 1 * delta;
-        } else {
-            this.sprite.tint = 0xffffff;
-        }
+            if (this.health <= 0 && this.isAlive) {
+                this.isAlive = false;
+                this.sprite.textures = this.bloodTextures;
+                this.sprite.gotoAndStop(Math.floor((Math.random() + 1) * 4));
+                this.container.zIndex = 0;
+                this.death();
+            }
 
-        if (this.attackCooldown > 0) {
-            this.attackCooldown -= 1 * delta;;
+            if (this.damageCooldown > 0) {
+                this.damageCooldown -= 1 * delta;
+            } else {
+                this.sprite.tint = 0xffffff;
+            }
+
+            if (this.attackCooldown > 0) {
+                this.attackCooldown -= 1 * delta;;
+            }
         }
     }
 
