@@ -110,7 +110,7 @@ export class TitleScreen {
         this.backgroundImage = new AnimatedSprite(textures, true);
         this.backgroundImage.position.set(0, 0);
         this.backgroundImage.loop = true;
-        this.backgroundImage.animationSpeed = 0.08;
+        this.backgroundImage.animationSpeed = 0.07;
         this.backgroundImage.scale.set(1, 1);
         this.container.addChild(this.backgroundImage);
         this.backgroundImage.play();
@@ -147,7 +147,7 @@ export class TitleScreen {
      * @param key Key that was pressed
      */
     private keyPressed(key: string) {
-        console.log(`Key Pressed: ${key}`);
+        //console.log(`Key Pressed: ${key}`);
     }
 
     /**
@@ -240,7 +240,7 @@ export class TitleScreen {
             this.titleAngleDirection = !this.titleAngleDirection;
             this.titleAngle = -this.titleAngleMax;
         }
-        this.titleText.angle = this.titleAngle;
+        //this.titleText.angle = this.titleAngle;
     }
 
     /**

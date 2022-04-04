@@ -20,8 +20,8 @@ export class Bellhead extends Entity {
      * Initialize enemy class
      */
     private init(): void {
-        this.health = 1000;
-        this.maxHealth = 1000;
+        this.health = 800;
+        this.maxHealth = 800;
         this.shield = 50;
         this.speed = 0.2;
         this.isAlive = true;
@@ -110,29 +110,31 @@ export class Bellhead extends Entity {
 
     public attack(): void {
         setTimeout(() => {
-            if (this.attackCooldown <= 0) {
-                super.attack();
-                this.attackCooldown = 250;
+            if (this.isAlive) {
+                if (this.attackCooldown <= 0) {
+                    super.attack();
+                    this.attackCooldown = 250;
 
 
-                this.sprite.textures = this.attackTextures;
-                this.sprite.onLoop = () => {
-                    if (this.sprite.textures === this.attackTextures) {
-                        this.attacking = false;
-                        this.sprite.textures = this.walkTextures;
-                        this.sprite.play();
-                    }
-                }
-
-                this.sprite.onFrameChange = (frame: number) => {
-                    if (this.sprite.textures === this.attackTextures) {
-                        if (frame === 7) {
-                            this.playShockwave();
+                    this.sprite.textures = this.attackTextures;
+                    this.sprite.onLoop = () => {
+                        if (this.sprite.textures === this.attackTextures) {
+                            this.attacking = false;
+                            this.sprite.textures = this.walkTextures;
+                            this.sprite.play();
                         }
                     }
-                }
 
-                this.sprite.play();
+                    this.sprite.onFrameChange = (frame: number) => {
+                        if (this.sprite.textures === this.attackTextures) {
+                            if (frame === 7) {
+                                this.playShockwave();
+                            }
+                        }
+                    }
+
+                    this.sprite.play();
+                }
             }
         }, 500);
     }
@@ -163,9 +165,44 @@ export class Bellhead extends Entity {
     }
 
     update(delta: number): void {
-        if (this.isAlive) {
-            super.update(delta);
+        super.update(delta);
 
+        if (!Player.playerIsAlive) {
+            return;
+        }
+
+        if (!this.attacking && this.isAlive) {
+            if (this.sprite.position.x < Player.PosX) {
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    this.sprite.scale.set(-1, 1);
+                }
+            } else {
+
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
+                if (Math.abs(xPos - Player.PosX) > 0.5) {
+                    this.sprite.scale.set(1, 1);
+                }
+            }
+
+            if (this.sprite.position.y < Player.PosY) {
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos, yPos + this.velocity.y * delta);
+
+            } else {
+                let xPos = this.sprite.position.x;
+                let yPos = this.sprite.position.y;
+                this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
+            }
+
+        }
+
+        if (this.isAlive) {
             this.checkPlayerDamageFromShockwave();
 
             let xPos = this.sprite.position.x;
@@ -173,51 +210,15 @@ export class Bellhead extends Entity {
             if (Math.abs(xPos - Player.PosX) < this.agroDistance && Math.abs(yPos - Player.PosY) < this.agroDistance && !this.attacking) {
                 this.attack();
             }
-
-
-            if (!Player.playerIsAlive) {
-                return;
-            }
-
-            if (!this.attacking) {
-                if (this.sprite.position.x < Player.PosX) {
-                    let xPos = this.sprite.position.x;
-                    let yPos = this.sprite.position.y;
-                    this.sprite.position.set(xPos + this.velocity.x * delta, yPos);
-                    if (Math.abs(xPos - Player.PosX) > 0.5) {
-                        this.sprite.scale.set(-1, 1);
-                    }
-                } else {
-
-                    let xPos = this.sprite.position.x;
-                    let yPos = this.sprite.position.y;
-                    this.sprite.position.set(xPos - this.velocity.x * delta, yPos);
-                    if (Math.abs(xPos - Player.PosX) > 0.5) {
-                        this.sprite.scale.set(1, 1);
-                    }
-                }
-
-                if (this.sprite.position.y < Player.PosY) {
-                    let xPos = this.sprite.position.x;
-                    let yPos = this.sprite.position.y;
-                    this.sprite.position.set(xPos, yPos + this.velocity.y * delta);
-
-                } else {
-                    let xPos = this.sprite.position.x;
-                    let yPos = this.sprite.position.y;
-                    this.sprite.position.set(xPos, yPos - this.velocity.y * delta);
-                }
-
-            }
-
-            if (!this.attacking && this.sprite.name !== 'walking') {
-                this.sprite.textures = this.walkTextures;
-                console.log("here")
-                this.sprite.play();
-                this.sprite.name = 'walking';
-            }
-
         }
+
+        if (this.isAlive && !this.attacking && this.sprite.name !== 'walking') {
+            this.sprite.textures = this.walkTextures;
+            this.sprite.play();
+            this.sprite.name = 'walking';
+        }
+
+
 
 
     }

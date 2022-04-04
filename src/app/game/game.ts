@@ -61,7 +61,7 @@ export class Game {
      * Starts the game.
      */
     startGame(): void {
-        console.log(`Starting game`);
+        //console.log(`Starting game`);
         this.gameMap = new GameMap();
         this.graphicsManagerService.addChild(this.gameMap.getContainer())
     }

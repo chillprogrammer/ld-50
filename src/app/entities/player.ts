@@ -105,7 +105,6 @@ export class Player extends Entity {
         ]
     }
 
-
     private calculateArmAndSwordAngle(): void {
         const mousePos = this.graphicsManagerService.getRenderer().plugins.interaction.mouse.global;
         const playerPos: { x: number, y: number } = this.sprite.getBounds();
@@ -165,6 +164,7 @@ export class Player extends Entity {
     }
 
     public reset(): void {
+        Entity.DeathCount = 0;
         this.setHealth(100);
         this.sprite.textures = this.idleTextures;
         this.sprite.play();

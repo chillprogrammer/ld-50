@@ -10,7 +10,7 @@ import { interval } from 'rxjs';
  */
 export class EntityManager {
 
-    private spawnBellheadTimer = interval(20000);
+    private spawnBellheadTimer = interval(30000);
 
     // Private list of Entities.
     private entityList: Entity[] = [];
@@ -28,8 +28,6 @@ export class EntityManager {
 
     public setContainer(container: Container): void {
         this.container = container;
-        this.spawnEntity(0);
-        this.spawnEntity(1);
     }
 
     /**
@@ -39,7 +37,7 @@ export class EntityManager {
     public update(delta: number) {
         this.x += 1 * delta;
 
-        if (Math.floor(this.x % 100) === 0) {
+        if (Math.floor(this.x % 70) === 0) {
             this.spawnEntity(1);
         }
 
@@ -72,9 +70,9 @@ export class EntityManager {
     private isCollidingWithSword(entity: Entity): boolean {
         const ab = Player.SwordBounds;
         const bb = entity.sprite.getBounds();
-        if(entity.type === 'bellhead') {
-            const hitboxReduction = 40;
-            return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width-hitboxReduction && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height-hitboxReduction;
+        if (entity.type === 'bellhead') {
+            const hitboxReduction = 20;
+            return ab.x - hitboxReduction + ab.width > bb.x && ab.x < bb.x + bb.width - hitboxReduction && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height - hitboxReduction;
         }
         return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
     }
@@ -96,7 +94,7 @@ export class EntityManager {
     private checkCollisionWithPlayer(entity: Entity): void {
         if (this.isCollidingWithPlayer(entity)) {
             if (Player.playerIsAlive) {
-                Player.playerEntity.takeDamage(10);
+                Player.playerEntity.takeDamage(5);
             }
         }
     }
