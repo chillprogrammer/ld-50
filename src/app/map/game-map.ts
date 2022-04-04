@@ -46,6 +46,8 @@ export class GameMap {
 
     private endscreen: GameOverScreen = null;
 
+    private userInterface: UI = null;
+
 
     constructor() {
         // Default arena settings
@@ -79,7 +81,9 @@ export class GameMap {
         this.createArenaStands();
         this.createTorch();
         this.createEndScreen();
+        this.createUI();
         //this.createAudience();
+        this.showUI(true);
         this.entityManager = new EntityManager();
         this.entityManager.setContainer(this.container)
     }
@@ -92,7 +96,17 @@ export class GameMap {
         })
     }
 
+    private createUI(): void {
+        this.userInterface = new UI();
+        this.container.addChild(this.userInterface.getContainer());
+    }
+
+    private showUI(val: boolean) {
+        this.userInterface.getContainer().visible = val;
+    }
+
     private showEndScreen(val: boolean) {
+        this.showUI(!val);
         if (val) {
             this.container.filters = [];
             this.endscreen.getContainer().visible = true;
@@ -241,6 +255,10 @@ export class GameMap {
 
         if (this.player.getHealth() <= 0 && !this.endscreen.getContainer().visible) {
             this.showEndScreen(true);
+        }
+
+        if (this.userInterface && this.userInterface.getContainer().visible) {
+            this.userInterface.update(delta);
         }
     }
 }

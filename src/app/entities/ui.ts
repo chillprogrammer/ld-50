@@ -1,62 +1,66 @@
-import * as PIXI from "pixi.js"
+import { Container, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
-import { Entity, TilesetInterface } from "./base-entity";
-import { Container, Graphics, NineSlicePlane, Sprite, Texture } from "pixi.js";
 import { Player } from "./player";
 
 export class UI {
 
     private container: Container = null;
 
-    private sprite: PIXI.Sprite;
+    private healthSprites: Sprite[] = [];
+    private MAX_HEALTH_ICONS: number = 20;
 
     constructor() {
         this.init();
     }
 
     private init() {
-        this.sprite = new Sprite();
-        this.sprite = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.sprite.anchor.set(0.5);
-        this.container.addChild(this.sprite);
+        this.container = new Container();
+        this.container.zIndex = 1008;
+        this.createHealthbar();
+    }
 
-        this.sprite = new Sprite();
-        this.sprite = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.sprite.anchor.set(0.6);
-        this.container.addChild(this.sprite);
+    private createHealthbar(): void {
+        for (let i = 0; i < this.MAX_HEALTH_ICONS; i++) {
+            let newHealthIcon: Sprite = null;
+            let xPos = -GraphicsManagerService.INITIAL_WIDTH / 2 - 20;
+            let yPos = -GraphicsManagerService.INITIAL_HEIGHT / 2 - 20;
+            if (i % 2 === 0) {
+                newHealthIcon = new Sprite(Texture.from('assets/art/Health_Left.png'))
+            } else {
+                newHealthIcon = new Sprite(Texture.from('assets/art/Health_Right.png'))
+            }
+            newHealthIcon.position.set(xPos + i * (11), yPos);
+            this.healthSprites.push(newHealthIcon);
+            this.container.addChild(this.healthSprites[i]);
+        }
+    }
 
-        this.sprite = new Sprite();
-        this.sprite = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.sprite.anchor.set(0.7);
-        this.container.addChild(this.sprite);
+    private createKillCount(): void {
 
-        this.sprite = new Sprite();
-        this.sprite = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.sprite.anchor.set(0.8);
-        this.container.addChild(this.sprite);
+    }
 
-        this.sprite = new Sprite();
-        this.sprite = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.sprite.anchor.set(0.9);
-        this.container.addChild(this.sprite);
+    private createTimeAlive(): void {
 
+    }
 
-
+    public update(delta: number) {
+        this.setHealth();
     }
 
     setHealth() {
-        
-        if (Player.playerEntity.getHealth() <= 80 && Player.playerEntity.getHealth() >= 60 ) {
-            
-        } else if (Player.playerEntity.getHealth() > 25) {
-            this.sprite.tint = 0xEED202;
-        }
-        else if (Player.playerEntity.getHealth() > 0) {
-            this.sprite.tint = 0xFF0000;
-        }
-        if (Player.playerEntity.getHealth() <= 0) {
-            this.sprite.width = 300;
-            this.sprite.tint = 0x000000;
+        const health = Player.playerEntity ? Player.playerEntity.getHealth() : 0;
+        const maxHealth = Player.playerEntity.getMaxHealth();
+        const healthIncrementChange = maxHealth / this.MAX_HEALTH_ICONS;
+        let x = 0;
+        for (let i = this.MAX_HEALTH_ICONS - 1; i >= 0; i--) {
+            if (health < maxHealth - (healthIncrementChange * x)) {
+                this.healthSprites[i].visible = false;
+            } else {
+                this.healthSprites[i].visible = true;
+            }
+            x++;
         }
     }
+
+    public getContainer() { return this.container; }
 }
