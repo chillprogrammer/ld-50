@@ -10,7 +10,7 @@ import { interval } from 'rxjs';
  */
 export class EntityManager {
 
-    private spawnBellheadTimer = interval(10000);
+    private spawnBellheadTimer = interval(30000);
 
     // Private list of Entities.
     private entityList: Entity[] = [];
