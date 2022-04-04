@@ -167,9 +167,6 @@ export class Bellhead extends Entity {
     update(delta: number): void {
         super.update(delta);
 
-        console.log(`Bellhead is: ${this.isAlive}`)
-
-
         if (!Player.playerIsAlive) {
             return;
         }
@@ -217,7 +214,6 @@ export class Bellhead extends Entity {
 
         if (this.isAlive && !this.attacking && this.sprite.name !== 'walking') {
             this.sprite.textures = this.walkTextures;
-            console.log("here")
             this.sprite.play();
             this.sprite.name = 'walking';
         }

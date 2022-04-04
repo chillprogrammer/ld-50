@@ -147,7 +147,7 @@ export class TitleScreen {
      * @param key Key that was pressed
      */
     private keyPressed(key: string) {
-        console.log(`Key Pressed: ${key}`);
+        //console.log(`Key Pressed: ${key}`);
     }
 
     /**

@@ -29,6 +29,8 @@ export class Entity {
     protected deathSounds: string[] = [];
     protected damageSounds: string[] = [];
 
+    public static DeathCount = 0;
+
     private bloodTextures: Texture[] = [
         Texture.from('assets/art/blood.png'),
         Texture.from('assets/art/blood2.png'),
@@ -113,6 +115,7 @@ export class Entity {
     }
 
     protected death(): void {
+        Entity.DeathCount++;
         if (this.deathSounds.length > 0) {
             const deathSound = this.deathSounds[this.deathSounds.length * Math.random() | 0];
             this.soundManagerService.playSound(deathSound);
