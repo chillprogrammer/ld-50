@@ -82,8 +82,8 @@ export class Enemy extends Entity {
     }
 
     update(delta: number): void {
+        super.update(delta);
         if (this.isAlive) {
-            super.update(delta);
 
             let moving = false;
 
