@@ -8,6 +8,7 @@ import { Enemy } from "../entities/enemy";
 import { EntityManager } from "../entities/entity-manager";
 import { Player } from "../entities/player";
 import { Torch } from "../entities/Torch";
+import { UI } from "../entities/ui";
 
 
 /**
@@ -20,6 +21,9 @@ export class GameMap {
 
     // Map
     private arenaObject: ArenaInterface = null;
+
+    //Health
+    private health: Sprite = null;
 
     // Arena Circle
     private arenaCircle: Sprite = null;
@@ -72,8 +76,16 @@ export class GameMap {
         this.createWallColumnsBottom();
         this.createArenaStands();
         this.createTorch();
+        this.createHealth();
         this.entityManager = new EntityManager();
         this.entityManager.setContainer(this.container)
+    }
+
+    private createHealth(): void {
+        this.health = new Sprite();
+        this.health = new Sprite(Texture.from('assets/art/Health_full.png'))
+        this.health.anchor.set(0.5);
+        this.container.addChild(this.health);
     }
 
     private createPlayer(): void {
