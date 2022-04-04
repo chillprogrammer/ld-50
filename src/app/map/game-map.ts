@@ -1,14 +1,14 @@
 import { GodrayFilter } from "@pixi/filter-godray";
-import { Container, Graphics, NineSlicePlane, Sprite, Texture } from "pixi.js";
+import { Container, Sprite, Texture } from "pixi.js";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { ServiceInjector } from "../../services/service-injector.module";
 import { Entity } from "../entities/base-entity";
-import { Bellhead } from "../entities/Bellhead";
-import { Enemy } from "../entities/enemy";
 import { EntityManager } from "../entities/entity-manager";
+import { Pedestrian } from "../entities/pedestrian";
 import { Player } from "../entities/player";
 import { Torch } from "../entities/Torch";
 import { UI } from "../entities/ui";
+import { GameOverScreen } from "../menus/game-over-screen";
 
 
 /**
@@ -38,11 +38,13 @@ export class GameMap {
     // Entities
     private entityManager: EntityManager = null;
     private player: Player = null;
-    private enemy: Enemy = null;
-    private bellhead: Bellhead = null;
     private torch: Torch = null;
 
     private godrayFilter: GodrayFilter = null;
+
+    private audienceList: Entity[] = [];
+
+    private endscreen: GameOverScreen = null;
 
 
     constructor() {
@@ -76,16 +78,58 @@ export class GameMap {
         this.createWallColumnsBottom();
         this.createArenaStands();
         this.createTorch();
-        this.createHealth();
+        this.createEndScreen();
+        //this.createAudience();
         this.entityManager = new EntityManager();
         this.entityManager.setContainer(this.container)
     }
 
-    private createHealth(): void {
-        this.health = new Sprite();
-        this.health = new Sprite(Texture.from('assets/art/Health_full.png'))
-        this.health.anchor.set(0.5);
-        this.container.addChild(this.health);
+    private createEndScreen() {
+        this.endscreen = new GameOverScreen();
+        this.container.addChild(this.endscreen.getContainer());
+        this.endscreen.retrySubject.subscribe(() => {
+            this.showEndScreen(false);
+        })
+    }
+
+    private showEndScreen(val: boolean) {
+        if (val) {
+            this.container.filters = [];
+            this.endscreen.getContainer().visible = true;
+        } else {
+            this.container.filters = [this.godrayFilter];
+            this.entityManager.reset();
+            this.player.reset();
+            this.endscreen.getContainer().visible = false;
+        }
+    }
+
+    private getRandomNumberBetween(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    private createAudience(): void {
+
+        for (let i = 0; i < 100; i++) {
+            let p = new Pedestrian();
+            this.container.addChild(p.getContainer());
+            this.audienceList.push(p);
+
+            const randomX = this.getRandomNumberBetween(Entity.maxRadius + 25, GraphicsManagerService.INITIAL_WIDTH / 2);
+            const randomY = this.getRandomNumberBetween(-GraphicsManagerService.INITIAL_HEIGHT / 2, GraphicsManagerService.INITIAL_HEIGHT / 2);
+            p.sprite.position.set(randomX, randomY);
+        }
+
+        for (let i = 0; i < 100; i++) {
+            let p = new Pedestrian();
+            this.container.addChild(p.getContainer());
+            this.audienceList.push(p);
+
+            const randomX = this.getRandomNumberBetween(-GraphicsManagerService.INITIAL_WIDTH / 2, -Entity.maxRadius - 25);
+            const randomY = this.getRandomNumberBetween(-GraphicsManagerService.INITIAL_HEIGHT / 2, GraphicsManagerService.INITIAL_HEIGHT / 2);
+            p.sprite.position.set(randomX, randomY);
+        }
+
     }
 
     private createPlayer(): void {
@@ -162,8 +206,16 @@ export class GameMap {
         }
     }
 
+    private updateAudience(delta: number) {
+        for (let pedestrian of this.audienceList) {
+            if (pedestrian) {
+                pedestrian.update(delta);
+            }
+        }
+    }
+
     private updatePlayer(delta: number): void {
-        if (this.player) {
+        if (this.player && this.player.isAlive) {
             this.player.update(delta);
         }
     }
@@ -181,8 +233,15 @@ export class GameMap {
     public update(delta: number): void {
         // TODO - add update logic
         this.updateGodrays(delta);
-        this.updatePlayer(delta);
-        this.updateEntityManager(delta);
+        if (!this.endscreen.getContainer().visible) {
+            this.updatePlayer(delta);
+            this.updateEntityManager(delta);
+            this.updateAudience(delta);
+        }
+
+        if (this.player.getHealth() <= 0 && !this.endscreen.getContainer().visible) {
+            this.showEndScreen(true);
+        }
     }
 }
 

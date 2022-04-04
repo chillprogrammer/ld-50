@@ -37,9 +37,9 @@ export class EntityManager {
      * @param delta 
      */
     public update(delta: number) {
-        this.x++;
+        this.x += 1 * delta;
 
-        if (this.x % 100 === 0) {
+        if (Math.floor(this.x % 200) === 0) {
             this.spawnEntity(1);
         }
 
@@ -109,8 +109,8 @@ export class EntityManager {
      * Removes all entities from memory, and cleans up memory.
      */
     public reset(): void {
-        for (let entity of this.entityList) {
-            entity.destroy();
+        for (let i = this.entityList.length - 1; i >= 0; i--) {
+            this.entityList[i].destroy();
             this.entityList.pop();
         }
     }

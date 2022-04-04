@@ -138,7 +138,7 @@ export class Bellhead extends Entity {
     }
 
     private playShockwave(): void {
-        this.shockwaveSprite.position.set(this.sprite.position.x, this.sprite.position.y-10);
+        this.shockwaveSprite.position.set(this.sprite.position.x, this.sprite.position.y - 10);
         this.shockwaveSprite.visible = true;
         this.container.addChild(this.shockwaveSprite);
         this.shockwaveSprite.gotoAndPlay(0);
@@ -163,11 +163,11 @@ export class Bellhead extends Entity {
     }
 
     update(delta: number): void {
-        super.update(delta);
-
-        this.checkPlayerDamageFromShockwave();
-
         if (this.isAlive) {
+            super.update(delta);
+
+            this.checkPlayerDamageFromShockwave();
+
             let xPos = this.sprite.position.x;
             let yPos = this.sprite.position.y;
             if (Math.abs(xPos - Player.PosX) < this.agroDistance && Math.abs(yPos - Player.PosY) < this.agroDistance && !this.attacking) {
