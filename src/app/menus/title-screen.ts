@@ -1,4 +1,5 @@
-import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Text, Texture } from "pixi.js";
+import { OutlineFilter } from "@pixi/filter-outline";
+import { AnimatedSprite, Container, MIPMAP_MODES, Rectangle, SCALE_MODES, Sprite, Text, Texture } from "pixi.js";
 import { Subscription } from "rxjs";
 import { GraphicsManagerService } from "../../services/graphics-manager/graphics-manager.service";
 import { KeyManagerService } from "../../services/key-manager/key-manager.service";
@@ -17,7 +18,7 @@ export class TitleScreen {
 
     // Title Text
     private titleColor: number = 0xb99223;
-    private titleText: Text = null;
+    private titleText: Sprite = null;
     private titleAngle: number = 0;
     private titleAngleDirection: boolean = false;
     private titleAngleMax: number = 2;
@@ -106,11 +107,11 @@ export class TitleScreen {
             spritesheetName: "intro.png"
         }
         const textures = this.loadTileSetIntoMemory(tilesetInterface) ?? [];
-        
+
         this.backgroundImage = new AnimatedSprite(textures, true);
         this.backgroundImage.position.set(0, 0);
         this.backgroundImage.loop = true;
-        this.backgroundImage.animationSpeed = 0.07;
+        this.backgroundImage.animationSpeed = 0.09;
         this.backgroundImage.scale.set(1, 1);
         this.container.addChild(this.backgroundImage);
         this.backgroundImage.play();
@@ -154,10 +155,13 @@ export class TitleScreen {
      * Creates text for Title.
      */
     private createTitleText(): void {
-        this.titleText = new Text("GLADIATOR GAME", { fontSize: 72, fill: this.titleColor, align: 'center', strokeThickness: 5 });
-        this.titleText.resolution = 2; // Crisp text.
+        this.titleText = new Sprite(Texture.from('assets/art/Title.png'));
+        const outlineFilter = new OutlineFilter();
+        outlineFilter.color = 0xB96234;
+        outlineFilter.thickness = 3.5;
+        this.titleText.filters = [outlineFilter];
         this.titleText.anchor.set(0.5);
-        this.titleText.position.set((GraphicsManagerService.INITIAL_WIDTH / 2), 150);
+        this.titleText.position.set((GraphicsManagerService.INITIAL_WIDTH / 2), 100);
         this.container.addChild(this.titleText);
     }
 
@@ -227,10 +231,10 @@ export class TitleScreen {
     private updateTitleText(delta: number): void {
         if (!this.titleAngleDirection) {
             this.titleAngle += this.titleAngleSpeed * delta;
-            this.titleText.scale.set(this.titleText.scale.x+0.002*delta, this.titleText.scale.y+0.002*delta);
+            this.titleText.scale.set(this.titleText.scale.x + 0.002 * delta, this.titleText.scale.y + 0.002 * delta);
         } else {
             this.titleAngle -= this.titleAngleSpeed * delta
-            this.titleText.scale.set(this.titleText.scale.x-0.002*delta, this.titleText.scale.y-0.002*delta);
+            this.titleText.scale.set(this.titleText.scale.x - 0.002 * delta, this.titleText.scale.y - 0.002 * delta);
         }
 
         if (this.titleAngle > this.titleAngleMax) {
