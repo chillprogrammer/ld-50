@@ -71,7 +71,7 @@ export class EntityManager {
         const ab = Player.SwordBounds;
         const bb = entity.sprite.getBounds();
         if (entity.type === 'bellhead') {
-            const hitboxReduction = 20;
+            const hitboxReduction = 30;
             return ab.x - hitboxReduction + ab.width > bb.x && ab.x < bb.x + bb.width - hitboxReduction && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height - hitboxReduction;
         }
         return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
