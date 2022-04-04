@@ -7,6 +7,7 @@ import { EntityManager } from "../entities/entity-manager";
 import { Pedestrian } from "../entities/pedestrian";
 import { Player } from "../entities/player";
 import { Torch } from "../entities/Torch";
+import { UI } from "../entities/ui";
 import { GameOverScreen } from "../menus/game-over-screen";
 
 
@@ -20,6 +21,9 @@ export class GameMap {
 
     // Map
     private arenaObject: ArenaInterface = null;
+
+    //Health
+    private health: Sprite = null;
 
     // Arena Circle
     private arenaCircle: Sprite = null;
